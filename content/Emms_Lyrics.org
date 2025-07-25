@@ -50,7 +50,7 @@ Instead modify emms-source-file-directory-tree-find directly, I add advice to it
 				;; 参考(emms-lyrics-toggle-display-buffer)
 				))))))
 #+END_SRC
-#+BEGIN_SRC gnuplot :file test.png
+#+BEGIN_SRC gnuplot :file ./test.png
   # set title "It would be nice if this were converted into a caption!"
   set xtics 0.5 nomirror
   set tics format "%.1f"
@@ -66,4 +66,4 @@ Instead modify emms-source-file-directory-tree-find directly, I add advice to it
 #+END_SRC
 
 #+RESULTS:
-[[file:test.png]]
+[[file:./test.png]]
