@@ -19,7 +19,7 @@ jobs:
         run: ./build.sh
 
       - name: Publish generated content to GitHub Pages
-        uses: JamesIves/[email protected]
+        uses: JamesIves/github-pages-deploy-action@4.1.4
         with:
           branch: github-pages
           folder: public
