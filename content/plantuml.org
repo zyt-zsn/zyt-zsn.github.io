@@ -1,0 +1,716 @@
+# -*- coding: utf-8-dos; -*-
+:PROPERTIES:
+:ID:       2f1d7c95-0520-4111-8a3f-82736b24997e
+:END:
+#+title: PlantUML
+#+author: 张运通
+* [[https://plantuml.com/zh/][PlantUML主页]]
+* Doc
+			[[https://www.visual-paradigm.com/cn/guide/uml-unified-modeling-language/what-is-uml/][What is UML]]
+			[[https://plantuml.com/zh/command-line][CommandLine]]
+			[[d:/zyt/Software/Plot/plantuml/PlantUML_Language_Reference_Guide_zh(V1.2023.11).pdf][本地 Reference Guide]]
+			[[https://remacs.cc/posts/%E9%9D%A2%E5%90%91%E4%BA%A7%E5%93%81%E7%BB%8F%E7%90%86%E7%9A%84emacs%E6%95%99%E7%A8%8B15.-%E5%9C%A8org-mode%E9%87%8C%E7%94%A8%E7%BA%AF%E6%96%87%E6%9C%AC%E7%94%BB%E5%9B%BE/][PlantUML绘图]]
+* 安装
+	#+BEGIN_SRC emacs-lisp
+	  (use-package plantuml-mode
+			:ensure t
+			:mode ("//.plantuml//'" . plantuml-mode)
+			:init
+			;;enable plantuml babel support
+			(add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
+			(org-babel-do-load-languages 'org-babel-load-languages
+										 (append org-babel-load-languages
+												 '((plantuml .t))))
+			:config
+			(let (
+			  (plantuml-path "d:/zyt/Software/Plot/plantuml/plantuml-1.2023.4.jar")
+			  )
+		  (setq org-plantuml-exec-mode 'jar)
+		  (setq org-plantuml-jar-path plantuml-path)
+		  ;; (setq org-plantuml-executable-path plantuml-path)
+		  ;; (setq plantuml-executable-path plantuml-path)
+		  (setq plantuml-default-exec-mode 'jar)
+		  (setq plantuml-jar-path plantuml-path)
+		  ;;set default babel header arguments
+		  (setq org-babel-default-header-args:plantuml
+					'((:exports . "results")
+				  (:results . "file")
+				  ))
+		  )
+			)
+	  (use-package flycheck-plantuml
+			:ensure t
+			:config
+			(with-eval-after-load 'flycheck
+		  (require 'flycheck-plantuml)
+		  (flycheck-plantuml-setup))
+			)
+
+    #+END_SRC
+* Examples
+	#+BEGIN_SRC plantuml :file hello.png :width 400
+	  @startuml
+	  !theme materia
+	  scale 2
+	  skinparam compomentStyle rectangle
+
+	  A -> B : 1.hello\n2.world
+	  @enduml
+    #+END_SRC
+	#+RESULTS[2ae3ee4a6af2fd7eb8b027d182973bb2ad9e5b6f]:
+	[[file:hello.png]]
+
+    #+BEGIN_SRC plantuml :file message&acknowledge.png :width 400
+	  shape: sequence_diagram
+	  @startuml
+	  !theme toy
+	  /'
+	  ' A;B
+	  '/
+	  A -> B : Hello
+	  B -> A : 你好
+	  B -> A : Hello
+	  @enduml
+    #+END_SRC
+
+	#+RESULTS[50b9302f2c5888acf91c0fecfa399d3f93419cff]:
+	[[file:message&acknowledge.png]]
+#+BEGIN_SRC plantuml :file version.png
+  @startuml
+  version
+  @enduml
+#+END_SRC
+
+#+RESULTS:
+[[file:version.png]]
+
+** [[https://plantuml.com/en/theme][Theme]]                       :UML_Theme:
+:PROPERTIES:
+:ID:       dcea9a55-57ed-4132-91cf-7620210841f2
+:END:
+
+*** [[https://the-lum.github.io/puml-themes-gallery/][PlantUML Themes Gallery]] :PlantUML_Theme_Gallery:
+:PROPERTIES:
+:ID:       a51c270b-16ab-49c7-bad4-0ebe6d75666d
+:END:
+*** List all avaliable themes
+	ps:很多对中文支持不好
+#+BEGIN_SRC plantuml :file themes.png
+  @startuml
+  help themes
+  @enduml
+#+END_SRC
+
+#+RESULTS:
+[[file:themes.png]]
+
+
+** Sequence Diagram
+*** 1.1 简单示例
+	  #+BEGIN_SRC plantuml :file simple.png
+		用户 		-> 	认证中心: 	登录操作
+		认证中心 	->	缓存	: 	存放(key=token+ip, value=token)token
+
+		用户		<-	认证中心:	认证成功返回token
+		用户		->	认证中心: 	下次访问头部携带token认证
+		认证中心	<-	缓存:		key=token+ip获取token
+		其他服务	<-	认证中心:	存在且校验成功则跳转到用户请求的其他服务
+		其他服务	->	用户:		信息
+      #+END_SRC
+
+	  #+RESULTS[a53b16b9bce516bea83e6bbd36c8aa4fe7b9b379]:
+	  [[file:simple.png]]
+
+*** 1.2 Delcaring participant
+#+BEGIN_SRC plantuml :file 1_2_1.png
+  @startuml
+  participant participant as Foo
+  actor 		actor 		as Foo1
+  boundary	boundary	as Foo2
+  control		control		as Foo3
+  entity		entity		as Foo4
+  database	database 	as Foo5
+  collections	collections	as Foo6
+  queue		queue		as Foo7
+  Foo	-> 	Foo1 : To actor
+  Foo ->	Foo2 : To boundary
+  Foo	->	Foo3 : To control
+  Foo -> 	Foo4 : To entity
+  Foo -> 	Foo5 : To database
+  Foo -> 	Foo6 : To collections
+  Foo -> 	Foo7 : To queue
+  @enduml
+#+END_SRC
+
+#+RESULTS:
+[[file:1_2.png]]
+#+BEGIN_SRC plantuml :file 1_2_2.png
+  @startuml
+  actor Bob	#red
+  participant	Alice
+  participant "很长很长很长\n的名字" as L #SeaGreen
+  Alice -> Bob: 认证请求
+  Bob -> Alice: 认证响应
+  Bob -> L: 记录事务日志
+  @enduml
+#+END_SRC
+
+#+RESULTS:
+[[file:1_2_2.png]]
+#+BEGIN_SRC plantuml :file 1_2_3.png
+  @startuml
+  participant 最后 order 30
+  participant 中间 order 20
+  participant 首个 order 10
+  @enduml
+#+END_SRC
+
+#+RESULTS:
+[[file:1_2_3.png]]
+
+*** 1.3 Use non-letters in participants
+#+BEGIN_SRC plantuml :file 1.3.png
+  @startuml
+  !theme toy
+  zyt -> xl : 你好
+  @enduml
+#+END_SRC
+
+#+RESULTS:
+[[file:1.3.png]]
+
+*** 1.4 Message to Self
+#+BEGIN_SRC plantuml :file 1_4.png
+  @startuml
+  Alice->Alice: This is a signal to self.\nIt also demonstrates\nmultiline \ntext
+  @enduml
+#+END_SRC
+
+#+RESULTS:
+[[file:1_4.png]]
+
+*** 1.5 Text alignment
+
+**** 1.5.1 Text of response message below the array
+#+BEGIN_SRC plantuml :file 1_5_1.png
+  @startuml
+  skinparam responseMessageBelowArrow true
+  Bob -> Alice : hello
+  Alice -> Bob : ok
+  @enduml
+#+END_SRC
+
+#+RESULTS:
+[[file:1_5_1.png]]
+
+**** 1.6 Change arrow style
+	You can change arrow style by several ways:
+	* add a final x to denote a lost message
+	* use \ or / instead of < or > to have only he bottom or top part of the arrow
+	* repeat the arrow head (for example, >> or //) head to have a thin drawing
+	* use -- instead of - to have a dotted arrow
+	* add a final "o" at arrow head
+	* use bidirectional arrow <->
+#+BEGIN_SRC plantuml :file 1_6.png
+  @startuml
+  Bob ->x Alice
+  Bob -> Alice
+  Bob ->> Alice
+  Bob -\ Alice
+  Bob \\- Alice
+  Bob ->o Alice
+  Bob o\\--Alice
+  Bob <-> Alice
+  Bob <->o Alice
+  @enduml
+#+END_SRC
+
+#+RESULTS:
+[[file:1_6.png]]
+
+**** 1.7 Change arrow color
+	You can change the color of individual arrows using the following notation:
+#+BEGIN_SRC plantuml :file 1_7.png
+  @startuml
+  Bob -[#red]> Alice : hello
+  Alice -[#0000FF]->Bob : ok
+  @enduml
+#+END_SRC
+
+#+RESULTS:
+[[file:1_7.png]]
+
+**** 1.8 Message sequence numbering
+	The keyword autonumber is used to automatically add number to messages.
+#+BEGIN_SRC plantuml :file 1_8.png
+  @startuml
+  autonumber
+  Bob -> Alice : Authentication Request
+  Bob <- Alice : Authentication Response
+  @enduml
+#+END_SRC
+
+#+RESULTS:
+[[file:1_8.png]]
+
+
+*** 1.9 页面标题，页面，页脚
+    #+BEGIN_SRC plantuml :file title.png :width 800
+@startuml
+
+header Page Header
+footer Page %page% of %lastpage%
+
+title Example Title
+
+Alice -> Bob : message 1
+Bob -> John: forward message 1
+
+newpage A title for the\nlast page
+footer Page %page% of %lastpage%
+Alice <--> Bob : message 2
+
+@enduml
+#+END_SRC
+
+    #+RESULTS[8631d83d4bc83ff414d183851a89703c29b069b6]:
+	[[file:title.png]]
+
+*** 1.20 引用
+	  #+BEGIN_SRC plantuml :file ref.png
+		@startuml
+		participant Alice
+		actor Bob
+
+		ref over Alice, Bob : init
+
+		Alice -> Bob : hello message
+
+		ref over Bob
+				This can be on
+				serveral lines
+		end ref
+		@enduml
+      #+END_SRC
+
+	  #+RESULTS[794d6707b2ab509ff7c49603225ddbb67e69be01]:
+	  [[file:ref.png]]
+
+*** 1.21 延迟
+	  #+BEGIN_SRC plantuml :file delay.png
+		@startuml
+		Alice -> Bob:认证请求
+		...
+		Bob -> Alice:认证响应
+		... 5分钟后 ...
+		Bob -> Alice:再见
+		@enduml
+      #+END_SRC
+
+	  #+RESULTS[92a4c0a8a795dacbc5239b15a9b0bccb8627c273]:
+	  [[file:delay.png]]
+
+** State Diagram
+
+*** Simple State
+#+BEGIN_SRC plantuml :file simple_state.png
+  @startuml
+  hide empty description
+
+  [*] --> State1
+  State1 --> [*]
+  State1 -> State2
+  State1 : this is a string
+  State1 : this is another string
+
+
+  State2 --> [*]
+  @enduml
+#+END_SRC
+
+#+RESULTS:
+[[file:simple_state.png]]
+
+x
+#+RESULTS:
+[[file:simple_state.png]]
+
+*** Composite State
+
+***** Internal sub-state
+#+BEGIN_SRC plantuml :file composie_state.png
+  @startuml
+  hide empty description
+  scale 350 width
+  [*] --> NotShooting
+
+  state NotShooting {
+		  [*] --> Idle
+		  Idle --> Configuring : EvConfig
+		  Configuring --> Idle : EvConfig
+  }
+
+  state Configuring {
+		  [*] --> NewValueSelection
+		  NewValueSelection --> NewValuePreview : EvNewValue
+		  NewValuePreview	--> NewValueSelection : EvNewValueRejected
+		  NewValuePreview --> NewValueSelection : EvNewValueSaved
+  }
+  state NewValuePreview {
+		  State1 -> State2
+  }	
+  @enduml
+#+END_SRC
+
+#+RESULTS:
+[[file:composie_state.png]]
+
+***** Sub-state to sub-state
+#+BEGIN_SRC plantuml :file ss_to_ss.png
+  @startuml
+  state A {
+		  state X {
+				  }
+				  state Y {
+						  }
+						  }
+						  state B {
+								  state Z {
+										  }
+										  }
+										  X --> Z
+										  Z --> Y
+										  @enduml
+#+END_SRC
+
+#+RESULTS:
+[[file:ss_to_ss.png]]
+
+***** Long name
+#+BEGIN_SRC plantuml :file ln.png
+  @startuml
+  scale 600 width
+  [*] -> State1
+  State1 --> State2 : Succeeded
+  State1 --> [*] : Aborted
+  State2 --> State3 : Succeeded
+  State2 --> [*] : Aborted
+  state State3 {
+		  state "Accumulate Enough Data\nLong State Name" as long1
+		  long1 : Just a test
+		  [*] --> long1
+		  long1 --> long1: New Data
+		  long1 --> ProcessData : Enouth Data
+		  }
+		  State3 --> State3 : Failed
+		  State3 --> [*] : Succeded / Save Results
+		  State3 --> [*] : Aborted
+  @enduml
+#+END_SRC
+
+#+RESULTS:
+[[file:ln.png]]
+
+***** Fork [fork, join]
+#+BEGIN_SRC plantuml :file fork.png
+  @startuml
+
+  state state_fork <<fork>>
+  [*] --> state_fork
+  state_fork --> State2
+  state_fork --> State3
+
+  state state_join <<join>>
+  State2 --> state_join
+  State3 --> state_join
+  state_join --> State4
+  State4 --> [*]
+  @enduml
+#+END_SRC
+
+#+RESULTS:
+[[file:fork.png]]
+
+***** Conditional [choice]
+#+BEGIN_SRC plantuml :file cond.png
+  @startuml
+  state "Req(Id)" as ReqId <<stlreceive>>
+  state "Minor(Id)" as MinorId
+  state "Major(Id)" as MajorId
+
+  state c <<choice>>
+  Idle --> ReqId
+  ReqId --> c
+  c --> MinorId : [id <= 10]
+  c --> MajorId : [id > 10]
+  @enduml
+#+END_SRC
+
+#+RESULTS:
+[[file:cond.png]]
+
+***** Point/Pin/Expansion [entryPoint, exitPoint, inputPin, outputPin, expansionInput, expansionOutput]
+#+BEGIN_SRC plantuml :file pt.png
+  @startuml
+  hide empty description
+  state Somp{
+		  state entry1 <<entryPoint>>
+		  state entry2 <<inputPin>>
+		  /'
+		   ' state sin
+		   '/
+		  /'
+		   ' state sin2
+		   '/
+		  entry1 --> sin
+		  entry2 --> sin
+		  sin -> sin2
+		  sin2 --> exitA <<exitPoint>>
+		  sin1 --> exitB <<expansionOutput>>
+		  }
+		  exitA --> Foo
+		  [*] --> entry1
+		  Foo1 -> entry2
+  @enduml
+#+END_SRC
+
+#+RESULTS:
+[[file:pt.png]]
+
+***** Arrow direction
+   - -down-> or -->
+   - -right-> or ->
+   - -left->
+   - -up->
+#+BEGIN_SRC plantuml :file ad.png
+  @startuml
+  First -> Second
+  Second --> Third
+  Third -left-> Last
+  [*] -up-> First
+  @enduml
+#+END_SRC
+
+#+RESULTS:
+[[file:ad.png]]
+
+***** Change line color and style
+#+BEGIN_SRC plantuml :file c&s.png
+  @startuml
+  State S5
+ 
+  S1 -[#DD00AA]-> S2
+  S1 -left[#yellow]-> S3
+  S1 -up[#red,dashed]-> S4
+  S1 -right[dotted,#sienna]-> S5
+
+  X1 -[dashed]-> X2
+  Z1 -[dotted]-> Z2
+  Y1 -[#blue,bold]-> Y2
+  @enduml
+#+END_SRC
+
+#+RESULTS:
+[[file:c&s.png]]
+
+***** Note
+ - note left of
+ - note right of
+ - note top of
+ - note bottom of
+ - note on link/end note
+#+BEGIN_SRC plantuml :file note.png
+  @startuml
+  [*] --> Active
+  note left of Active : 这是一个短注释
+  Active --> Inactive
+  note right of Inactive : A note can also\nbe defined on\nseveral lines
+  note  "浮动注释" as fn
+  /'
+  ' fn --> [*]
+  '/
+  note "指向结束" as pn
+  pn -up-> [*]
+
+  Inactive --> [*]
+  @enduml
+#+END_SRC
+
+#+RESULTS:
+[[file:note.png]]
+
+****** 
+Note on link
+#+BEGIN_SRC plantuml :file nl.png
+  @startuml
+  [*] -> State1
+  State1 --> State2
+  note on link
+   this is a state-transition note
+  end note
+  @enduml
+#+END_SRC
+
+#+RESULTS:
+[[file:nl.png]]
+
+****** Inline color
+#+BEGIN_SRC plantuml :file ic.png
+  @startuml
+  state CurrentSite #pink {
+		  state HardwareSetup #lightblue {
+				  state Site #brown
+				  Site -[hidden]-> Controller
+				  Controller -[hidden]-> Devices
+		  }
+		  state PresentationSetup{
+				  Groups -[hidden]-> PlansAndGraphics
+		  }
+		  state Trends #FFFF77
+		  state Schedule #magenta
+		  state AlarmSupression
+  }
+  @endum
+#+END_SRC
+
+#+RESULTS:
+[[file:ic.png]]
+
+****** [[https://plantuml.com/state-diagram#7aa53dbdfc2137bf][Skinparam]]
+[[https://plantuml-documentation.readthedocs.io/en/latest/index.html#][Ashley’s PlantUML Documentation]]
+[[https://plantuml-documentation.readthedocs.io/en/latest/formatting/all-skin-params.html][All skin parameters]]
+#+BEGIN_SRC plantuml :file sp.png
+  @startuml
+  help skinparams
+  /'
+   ' skinparameters
+   '/
+  @enduml
+#+END_SRC
+
+#+RESULTS:
+[[file:sp.png]]
+#+BEGIN_SRC plantuml :file date.png
+  help
+  help color
+#+END_SRC
+
+** 思维导图
+*** mindmap
+	  #+BEGIN_SRC plantuml :file mindmap.png
+		@startmindmap
+		,* Debian
+		,** Ubuntu
+		,*** Linux Mint
+		,*** Kubuntu
+		,*** Lubuntu
+		,*** KDE Neon
+		,** LMDE
+		,** SolydXK
+		,** SteamOS
+		,** Raspbian with a very long name
+		,*** <s>Raspmbc</s> => OSMC
+		,*** <s>Raspyfi</s> => Volumio
+		@endmindmap
+      #+END_SRC
+
+	  #+RESULTS[2c51c28b10cccc2a7759cc780e16f4ca52decbe2]:
+	  [[file:mindmap.png]]
+
+** Preprocessing
+#+begin_src plantuml :file ./plantuml-rO0bOn.png :exports both
+  @startuml
+  !procedure $foo($arg)
+	  :procedure start;
+	  !while $arg!=0
+		  !$i=3
+		  #palegreen:arg=$arg;
+		  !while $i!=0
+			  :arg=$arg and i=$i;
+			  !$i = $i - 1
+		  !endwhile
+		  !$arg = $arg - 1
+	  !endwhile
+	  :procedure end;
+  !endprocedure
+  start
+  $foo(3)
+  end
+  @enduml
+#+end_src
+
+
+
+** Help
+#+begin_src plantuml :file ./plantuml-AulLmc.png :exports both
+help keywords
+#+end_src
+
+#+RESULTS:
+[[file:./plantuml-AulLmc.png]]
+
+
+
+#+begin_src plantuml :file ./plantuml-cPViiX.png :exports both
+  @startuml
+
+  !define SALT_COLOR #009900
+  !define JSON_COLOR #FF7700
+
+  skinparam activity {
+	StartColor<< (Salt,$SALT_COLOR) >> White
+	EndColor<< (Salt,$SALT_COLOR) >> White
+  }
+
+  start
+  :Salt Activity;
+  :Minion = 'minion1';
+  :Function = 'state.apply';
+  :Tgt = 'webserver';
+
+  fork
+	:JSON Object;
+	:{ "state": "latest", "pkg": "nginx" };
+  end fork
+
+  fork
+	:JSON Object;
+	:{ "key1": "value1", "key2": "value2", "key3": "value3" };
+  end fork
+
+  stop
+
+  @enduml
+#+end_src
+
+#+RESULTS:
+[[file:./plantuml-cPViiX.png]]
+
+* Special by zyt
+
+** 判断的结束样式
+:PROPERTIES:
+:ID:       6ee9abc3-1df0-49d2-ac1f-511385249efa
+:ROAM_ALIASES: style
+:END:
+	#+begin_src plantuml :file ./plantuml-m7Kbjq.png :exports both
+	  @startuml
+	  skinparam ConditionEndStyle hline
+	  :A;
+	  if (decision) then (yes)
+	  :B1;
+	  else (no)
+	  endif
+	  :C;
+	  @enduml
+	#+end_src
+
+	#+RESULTS:
+	[[file:./plantuml-m7Kbjq.png]]
+** [[https://www.cnblogs.com/huntdream/p/4007160.html][UML中文显示]]
+:PROPERTIES:
+:ID:       c719ebca-6009-4406-8b78-9f548434014e
+:END:
+	#+begin_src emacs-lisp
+	  (setq org-plantuml-executable-args '("-headless" "-charset UTF-8"))
+	#+end_src
