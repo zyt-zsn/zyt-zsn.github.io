@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Play music with lyrics in EMMS</title>
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css" />
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">Play music with lyrics in EMMS</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org0c64549">1. Auto download lyrics and pop out lyric buffer when download is done.</a></li>
+</ul>
+</div>
+</div>
+<p>
+Although Emms has supported lyrics out of box(<a href="https://www.gnu.org/software/emms/manual/#Lyrics">Lyrics</a>),
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="font-weight: bold;">require</span> '<span style="font-weight: bold; text-decoration: underline;">emms-lyrics</span>)
+(emms-lyrics 1)
+</pre>
+</div>
+<p>
+{{&lt; param date &gt;}}
+{{&lt; param weight &gt;}}
+but it only displays lyrics when there is lyric files in local directory.
+</p>
+
+<p>
+find.exe outputs file path encoded in utf-8, so you must told emms-source-file-directory-tree-find
+to use utf-8 parsing file pathes.
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(advice-add
+ 'emms-source-file-directory-tree-find
+ <span style="font-weight: bold;">:around</span>
+ (<span style="font-weight: bold;">lambda</span>(orig <span style="font-weight: bold; text-decoration: underline;">&amp;rest</span> args)
+       (<span style="font-weight: bold;">let</span> (
+                 (coding-system-for-read 'utf-8)
+                 )
+         (apply orig args))))
+</pre>
+</div>
+
+<p>
+Instead modify emms-source-file-directory-tree-find directly, I add advice to it to avoid repeating work when updated to the latest version of emms package 
+</p>
+
+<div id="outline-container-org0c64549" class="outline-2">
+<h2 id="org0c64549"><span class="section-number-2">1.</span> Auto download lyrics and pop out lyric buffer when download is done.</h2>
+<div class="outline-text-2" id="text-1">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="font-weight: bold;">setq</span> emms-player-started-hook '
+              ((<span style="font-weight: bold;">lambda</span> ()
+                 (lyrics-fetcher-show-lyrics
+                      nil
+                      <span style="font-weight: bold;">:suppress-open</span> t
+                      <span style="font-weight: bold;">:suppress-switch</span> nil
+                      <span style="font-weight: bold;">:callback</span>
+                      (<span style="font-weight: bold;">lambda</span>(f)
+                        (<span style="font-weight: bold;">progn</span>
+                              (emms-lyrics-start)
+                              (emms-last-played-update-current)
+                              (emms-playing-time-start)
+                              (emms-mode-line-alter)
+                              <span style="font-weight: bold; font-style: italic;">;; </span><span style="font-weight: bold; font-style: italic;">Only pop out lyrics buffer when emms playlist buffer is displayed.
+</span>                              (<span style="font-weight: bold;">when</span> (get-buffer-window emms-playlist-buffer-name)
+                                (<span style="font-weight: bold;">save-selected-window</span>
+                                      (pop-to-buffer emms-lyrics-buffer)))
+                              <span style="font-weight: bold; font-style: italic;">;; </span><span style="font-weight: bold; font-style: italic;">&#21442;&#32771;(emms-lyrics-toggle-display-buffer)
+</span>                              ))))))
+</pre>
+</div>
+<div class="org-src-container">
+<pre class="src src-gnuplot"># set title "It would be nice if this were converted into a caption!"
+set xtics 0.5 nomirror
+set tics format "%.1f"
+set margins -1,0,7,0
+set xrange [-1:1]
+set yrange [1:3]
+set key notitle invert under reverse Left left spacing 2 samplen 0.7
+set arrow 1 filled from graph 0.4, 0.7 to graph 0.6, 0.7
+set label 1 at graph 0.5, 0.75 "$k$" center
+Title_E = 'EllipticE$(k)=\int_0^{\pi/2} {\sqrt{1-k^2\sin^2\theta}}~d\theta$'
+Title_K = 'EllipticK$(k)=\int_0^{\pi/2} {\sqrt{1-k^2\sin^2\theta}~}^{-1}~d\theta$'
+plot EllipticE(x) lw 3 title Title_E, EllipticK(x) lw 3 title Title_K
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Date: 2023-11-01 Wed 00:00</p>
+<p class="creator"><a href="https://www.gnu.org/software/emacs/">Emacs</a> 29.3 (<a href="https://orgmode.org">Org</a> mode 9.6.15)</p>
+</div>
+</body>
+</html>
