@@ -1,7 +1,0 @@
-#+TITLE: zyt's blog site
-* test1
-
-* test2
-[[./plantuml.org][My Plantuml]]
-
-[[./Emms_Lyrics.org][Play music with lyrics in EMMS]]
