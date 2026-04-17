@@ -1,0 +1,469 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2026-04-18 六 00:50 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>tab bar mode</title>
+<meta name="author" content="zyt" />
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css" />
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">tab bar mode</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org7fd21e9">1. Emacs workspace management with tab-bar mode</a></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org7fd21e9" class="outline-2">
+<h2 id="org7fd21e9"><span class="section-number-2">1.</span> <a href="https://mihaiolteanu.me/emacs-workspace-management">Emacs workspace management with tab-bar mode</a></h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Emacs workspace management with tab-bar mode
+While using Emacs only for text editing I've switched between it, the Terminal Emulator and the Browser pretty much like on a Windows system: Alt+Tab. But after slowly incorporating both eshell and then exwm into my configuration and workflow, I kinda wanted that behavior back. In short, keeping all shell stuff in a separate window and instantly switching to it. Same with the browser and the rest of the UI stuff. I've tried tab-mode and knew instantly that it's what I want. Used straight out of the box though, it doesn't fulfill all my needs: switching to a buffer or browsing an url doesn't automatically change the tab, for example. So I've added that functionality and some others goodies to ease the management of buffers. Below is a setup, that though highly opinionated, is completely functional. You can adapt it for your own needs.
+</p>
+
+<p>
+Gather all similar buffers in their own tabs
+The tab-bar mode enables one to have as many tabs as one wants on each Emacs frame. This is similar to what we have in standard text editors or in browsers. The great thing is that each tab contains not just a single buffer but a window configuration. That is, I can split my window into multiple buffers, save it as a tab and give it a name. Switch to a different tab and I have a different set of buffers split differently. It is the perfect place to have a tab containing all my shells, a tab containing code and org files and one containing the browser, pdf viewers or music players. I am using exwm, but you don't need to. What follows still applies to a non-exwm setup, only with different tabs and functionalities. With that, let's start coding.
+</p>
+
+<p>
+Since, for some reason or another, my tabs are not saved after I exit Emacs, even though I have the desktop-save-mode enabled, I'm making sure I have the tabs I need every time I start Emacs,
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="font-weight: bold; font-style: italic;">;; </span><span style="font-weight: bold; font-style: italic;">Ensure the needed tabs are created or exist; add extra to your liking
+</span>(<span style="font-weight: bold;">progn</span> (tab-create <span style="font-style: italic;">"files"</span>)
+           (tab-create <span style="font-style: italic;">"eshells"</span>)
+           (tab-create <span style="font-style: italic;">"exwm"</span>))
+
+(<span style="font-weight: bold;">defun</span> <span style="font-weight: bold;">tab-create</span> (name)
+  <span style="font-style: italic;">"Create the NAME tab if it doesn't exist already."</span>
+  (<span style="font-weight: bold;">condition-case</span> nil
+          (<span style="font-weight: bold;">unless</span> (equal (alist-get 'name (tab-bar--current-tab))
+                                         name)
+                (tab-bar-rename-tab-by-name name name))
+        (<span style="font-weight: bold;">error</span> (tab-new)
+                   (tab-bar-rename-tab name))))
+
+<span style="font-weight: bold; font-style: italic;">;; </span><span style="font-weight: bold; font-style: italic;">Hide the tabs since I don't want to click on them.
+</span>(<span style="font-weight: bold;">setf</span> tab-bar-show nil)
+</pre>
+</div>
+
+<p>
+I have only three tabs, one for all the eshells, one for UI buffers, like browsers, pdf viewers, video players, etc. and one for the "normal" buffers, like code, org files and the like. I'm also hiding the tab bar so that after setting all up it doesn't even matter what package I'm using to organize all of this. I don't want it to get in my way. I just want to switch buffers seamlessly without even thinking about it.
+</p>
+
+<p>
+How to quickly switch to a different tab? I've defined some extra interactive functions that are just wrappers around the build-in method for changing the tabs, since I will use this feature in other places as well,
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="font-weight: bold;">defun</span> <span style="font-weight: bold;">tab-bar-files</span> ()
+  <span style="font-style: italic;">"Select the files tab-bar. Force return `</span><span style="font-weight: bold; font-style: italic; text-decoration: underline;">t</span><span style="font-style: italic;">'."</span>
+  (<span style="font-weight: bold;">interactive</span>)
+  (tab-bar-select-tab-by-name <span style="font-style: italic;">"files"</span>)
+  t)
+
+(<span style="font-weight: bold;">defun</span> <span style="font-weight: bold;">tab-bar-eshells</span> ()
+  <span style="font-style: italic;">"Select the eshells tab-bar. Force return `</span><span style="font-weight: bold; font-style: italic; text-decoration: underline;">t</span><span style="font-style: italic;">'."</span>
+  (<span style="font-weight: bold;">interactive</span>)
+  (tab-bar-select-tab-by-name <span style="font-style: italic;">"eshells"</span>)
+  t)
+
+(<span style="font-weight: bold;">defun</span> <span style="font-weight: bold;">tab-bar-exwm</span> ()
+  <span style="font-style: italic;">"Select the wm tab-bar. Force return `</span><span style="font-weight: bold; font-style: italic; text-decoration: underline;">t</span><span style="font-style: italic;">'."</span>
+  (<span style="font-weight: bold;">interactive</span>)
+  (tab-bar-select-tab-by-name <span style="font-style: italic;">"exwm"</span>)
+  t)
+
+(<span style="font-weight: bold;">bind-keys</span>
+ (<span style="font-style: italic;">"s-F"</span> . tab-bar-files)
+ (<span style="font-style: italic;">"s-W"</span> . tab-bar-exwm)
+ (<span style="font-style: italic;">"s-Z"</span> . tab-bar-eshells))
+</pre>
+</div>
+
+<p>
+I'm also binding some keys to these functions. I'm using a programmable keyboard, so I have plenty of keys to choose from. My binding is actually C-x t F but the action I need to take is just pressing one of the big thumb cluster keys and f. I want my most used commands to be reachable with the fewest keys possible.
+</p>
+
+<p>
+Open existing buffers in the correct tab
+The previous setup takes care of grouping the buffers in their respective tabs and switching to the tabs whenever I need to switch between code, shell and browser.
+</p>
+
+<p>
+The next step is to open buffers into their correct tab regardless of the tab that I'm currently located in. That is, if I'm using the browser and I'm in the exwm tab, for example, and I want to switch buffers with C-x b (ivy-switch-buffer in my case), and select an eshell buffer from the list of available buffers, I want it to open in the eshell tab automatically and not in the exwm tab I'm currently in. Otherwise I will soon get an ugly mix of buffers everywhere or I'll have to pay attention and switch to the correct tab every time I want to switch buffers. Not so pretty. So how do I do it?
+</p>
+
+<p>
+I'm advising the function that does the buffer switching. How does advising work? Let's say I have a package defining a function myf,
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="font-weight: bold;">defun</span> <span style="font-weight: bold;">myf</span> (n)
+  (message <span style="font-style: italic;">"The number: %d"</span> 5))
+
+<span style="font-weight: bold; font-style: italic;">;; </span><span style="font-weight: bold; font-style: italic;">Eval and check the *Messages* buffer
+</span>(myf 5)
+
+</pre>
+</div>
+
+
+<p>
+Assume I want to modify this function and have it print out my own message before its message. Something like this,
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="font-weight: bold;">defun</span> <span style="font-weight: bold;">myf</span> (n)
+  (message <span style="font-style: italic;">"I've called myf with argument %d"</span> n)
+  (message <span style="font-style: italic;">"The number: %d"</span> 5))
+
+<span style="font-weight: bold; font-style: italic;">;; </span><span style="font-weight: bold; font-style: italic;">Eval and check the *Messages* buffer
+</span>(myf 5)
+</pre>
+</div>
+
+<p>
+I’ve called myf with argument 5
+The number: 5
+</p>
+
+<p>
+It gets the job done. But if the package owner updates myf function in the future, and the said package depends on this new updated function for its behavior, I will be left with the old implementation + my code. That's bad. I would have to copy the new function and add my code to it every time this kind of thing happens otherwise things might start to fall apart. There is a better approach with advice's,
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="font-weight: bold;">defun</span> <span style="font-weight: bold;">myf</span> (n)
+  (message <span style="font-style: italic;">"The number: %d"</span> 5))
+
+(myf 5)
+<span style="font-weight: bold; font-style: italic;">;; </span><span style="font-weight: bold; font-style: italic;">The number: 5
+</span>
+(advice-add 'myf
+                        <span style="font-weight: bold;">:before</span> (<span style="font-weight: bold;">lambda</span> (n)
+                                          (message <span style="font-style: italic;">"I've called myf with argument %d"</span> n)))
+(myf 5)
+</pre>
+</div>
+
+<p>
+I’ve called myf with argument 5
+The number: 5
+</p>
+
+<p>
+Concretely, I've called advice-add with my function as a symbol, together with a new function of one argument, since the original myf function also expects one argument, and the keyword :before. The result is exactly the same as the previous attempt where I've modified the function itself. But the advantage is greater with advising, since if the package containing myf gets updated, I don't have to modify anything to get the same behavior I want,
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="font-weight: bold;">defun</span> <span style="font-weight: bold;">myf</span> (n)
+  (message <span style="font-style: italic;">"The number is: %d"</span> 5))
+
+(myf 5)
+</pre>
+</div>
+
+<p>
+I’ve called myf with argument 5
+The number is: 5
+</p>
+
+<p>
+I get my own message as before, plus the updated message from myf. This is perfect!
+</p>
+
+<p>
+I can use this great feature to advice the function that does the buffer switching, in my case ivy-switch-buffer but you should adapt it for your own needs. That is, I want to make sure I open the buffer in the correct tab, so I don't have to manually switch tabs before actually opening the buffer. Looking at it in detail, advising ivy-switch-buffer is a bit wrong, since that function only opens a list of buffers for narrowing and selection and does not make the buffer selection itself. The correct function to advice is the function that gets called once I select a buffer. So I call C-h f ivy-switch-buffer and check it's definition,
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="font-weight: bold;">defun</span> <span style="font-weight: bold;">ivy-switch-buffer</span> ()
+  <span style="font-style: italic;">"Switch to another buffer."</span>
+  (<span style="font-weight: bold;">interactive</span>)
+  (ivy-read <span style="font-style: italic;">"Switch to buffer: "</span> #'internal-complete-buffer
+                        <span style="font-weight: bold;">:keymap</span> ivy-switch-buffer-map
+                        <span style="font-weight: bold;">:preselect</span> (buffer-name (other-buffer (current-buffer)))
+                        <span style="font-weight: bold;">:action</span> #'ivy--switch-buffer-action
+                        <span style="font-weight: bold;">:matcher</span> #'ivy--switch-buffer-matcher
+                        <span style="font-weight: bold;">:caller</span> 'ivy-switch-buffer))
+</pre>
+</div>
+
+<p>
+Ok, the function I'm interested in is ivy&#x2013;switch-buffer-action. That's an internal function and ideally I should not depend or use it in any way, but I went for it in this case, anyway. So now I have this,
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="font-weight: bold; font-style: italic;">;; </span><span style="font-weight: bold; font-style: italic;">Make sure `</span><span style="font-weight: bold; font-style: italic; text-decoration: underline;">ivy-switch-buffer</span><span style="font-weight: bold; font-style: italic;">' opens each buffer in it's correct tab,
+</span><span style="font-weight: bold; font-style: italic;">;; </span><span style="font-weight: bold; font-style: italic;">depending on its mode.
+</span>(advice-add 'ivy--switch-buffer-action
+                        <span style="font-weight: bold;">:before</span> #'switch-to-tab-based-on-mode)
+
+(<span style="font-weight: bold;">defun</span> <span style="font-weight: bold;">switch-to-tab-based-on-mode</span> (buff)
+  <span style="font-style: italic;">"Switch to the desired tab-bar, depending on BUFF mode."</span>  
+  (<span style="font-weight: bold;">or</span> (<span style="font-weight: bold;">and</span> (buffer-mode-p buff 'eshell-mode)
+                   <span style="font-weight: bold; font-style: italic;">;; </span><span style="font-weight: bold; font-style: italic;">open eshell buffers in the eshells tab
+</span>                   (tab-bar-eshells))
+          (<span style="font-weight: bold;">and</span> (buffer-mode-p buff 'exwm-mode)
+                   <span style="font-weight: bold; font-style: italic;">;; </span><span style="font-weight: bold; font-style: italic;">..browsers and the like in the exwm tab
+</span>                   (tab-bar-exwm))
+          <span style="font-weight: bold; font-style: italic;">;; </span><span style="font-weight: bold; font-style: italic;">...and the rest of the buffers in the files tab
+</span>          (tab-bar-files)))
+
+(<span style="font-weight: bold;">defun</span> <span style="font-weight: bold;">buffer-mode-p</span> (buffer-or-string mode)
+  <span style="font-style: italic;">"Returns the major mode associated with a buffer."</span>
+  (<span style="font-weight: bold;">with-current-buffer</span> buffer-or-string
+        (equal major-mode mode)))
+</pre>
+</div>
+
+<p>
+I hope that is clear. Before calling ivy&#x2013;switch-buffer-action, which is the function invoked when I press RET on the buffers list, I want to switch to the correct tab based on the buffer's major mode. So if I'm writing some piece of code in the files tab and I want to switch to an eshell buffer to build my project, let's say, that would automatically change the tab bar to eshells. Pretty neat. This is, of course, assuming I got the correct eshell buffer already open in my eshells tab. But I'll get to that in a moment.
+</p>
+
+<p>
+Open new buffers in the correct tab
+Its a similar story when opening new files. I've shown how we can handle switching buffers. That is one command. But it would be useful if say, I'm in an eshell buffer and want to open a file, either interactively (counsel-find-file, for example), or directly from the command line with find-file. These are different commands than the one I've advised before. Surely, I'd want that new buffer to get thrown in the files tab and not poison my healthy eshells tab,
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(advice-add 'find-file
+                        <span style="font-weight: bold;">:around</span> #'find-file-in-the-files-tab-advice)
+
+(<span style="font-weight: bold;">defun</span> <span style="font-weight: bold;">find-file-in-the-files-tab-advice</span> (orig-func filename <span style="font-weight: bold; text-decoration: underline;">&amp;rest</span> wildcards)
+  <span style="font-style: italic;">"Open FILENAME in the files tab."</span>
+  (<span style="font-weight: bold;">let</span> ((dir default-directory))
+        (tab-bar-select-tab-by-name <span style="font-style: italic;">"files"</span>)
+        (<span style="font-weight: bold;">let</span> ((default-directory dir))
+          (apply orig-func filename wildcards))))
+</pre>
+</div>
+
+<p>
+Honestly, I can't tell why I haven't used a :before advice in this case, as well. Maybe there really is a reason and I'm not planing on fiddling with it now since I'm writing this way after the fact. The :around advice is a little more complicated, but not conceptually. While in the previous advice, my new function gets the argument passed when calling the original function, in this case I also get the original function itself. It now depends on me to actually call the original function after I did my job (or before, or between, it's my choice, really), whereas before the original function was automatically called for me after my new function, as the name implies. You can play around with some examples. It really is neat and easy to grasp once you've seen an example or two.
+</p>
+
+<p>
+Quick access to important files/buffers
+One thing I like to have is the ability to quickly open any of the most used/visited buffers, like init.el, the <b>scratch</b> buffer, the browser or my notes.org. That is, I don't want to have to search through a list of all opened buffers everytime I want to switch to any one of those. I want a quick access key combination for that,
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(defhydra hydra-file (<span style="font-weight: bold;">:exit</span> t)
+  (<span style="font-style: italic;">"w"</span> (<span style="font-weight: bold;">lambda</span> () (<span style="font-weight: bold;">interactive</span>) (switch-to-buffer <span style="font-style: italic;">"chromium"</span> )) <span style="font-style: italic;">"browser"</span>)
+  (<span style="font-style: italic;">"s"</span> (<span style="font-weight: bold;">lambda</span> () (<span style="font-weight: bold;">interactive</span>) (switch-to-buffer <span style="font-style: italic;">"*scratch*"</span>)) <span style="font-style: italic;">"*scratch*"</span>)
+  (<span style="font-style: italic;">"i"</span> (<span style="font-weight: bold;">lambda</span> () (<span style="font-weight: bold;">interactive</span>) (switch-to-buffer <span style="font-style: italic;">"init.el"</span>  )) <span style="font-style: italic;">"init.el"</span>)  
+  (<span style="font-style: italic;">"c"</span> (<span style="font-weight: bold;">lambda</span> () (<span style="font-weight: bold;">interactive</span>) (switch-to-buffer <span style="font-style: italic;">"notes.org"</span>)) <span style="font-style: italic;">"notes"</span>)
+  (<span style="font-style: italic;">"q"</span> nil                                                      <span style="font-style: italic;">"quit"</span>))
+
+(<span style="font-weight: bold;">bind-key</span> (<span style="font-style: italic;">"s-f"</span> . hydra-file/body))
+</pre>
+</div>
+
+<p>
+So s-f w goes to the chromium buffer, s-f i to the init.el buffer, etc. But I get the same problem as before, meaning, I want to quickly go to these buffers but at the same time let Emacs automatically switch tabs for me. So instead of switch-to-buffer we can have a function that switches tabs first, and only then calls switch-to-buffer. I have tried to advice the switch-to-buffer function itself, but I get some unwanted side-effects. I assume it is because that function is used in a whole lot of places and in different packages to do maybe some non-orthodox stuff, unlike the ivy one you've seen before which is used only by the ivy package. Since there are, presumably, only a few very important buffers, we can do something like this,
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(defhydra hydra-file (<span style="font-weight: bold;">:exit</span> t)
+  (<span style="font-style: italic;">"w"</span> (<span style="font-weight: bold;">lambda</span> () (<span style="font-weight: bold;">interactive</span>) (select-buffer-in-tab <span style="font-style: italic;">"chromium"</span>    <span style="font-style: italic;">"exwm"</span>))  <span style="font-style: italic;">"browser"</span>)
+  (<span style="font-style: italic;">"s"</span> (<span style="font-weight: bold;">lambda</span> () (<span style="font-weight: bold;">interactive</span>) (select-buffer-in-tab <span style="font-style: italic;">"*scratch*"</span>   <span style="font-style: italic;">"files"</span>)) <span style="font-style: italic;">"*scratch*"</span>)
+  (<span style="font-style: italic;">"i"</span> (<span style="font-weight: bold;">lambda</span> () (<span style="font-weight: bold;">interactive</span>) (select-buffer-in-tab <span style="font-style: italic;">"init.el"</span>     <span style="font-style: italic;">"files"</span>)) <span style="font-style: italic;">"init.el"</span>)
+  (<span style="font-style: italic;">"m"</span> (<span style="font-weight: bold;">lambda</span> () (<span style="font-weight: bold;">interactive</span>) (select-buffer-in-tab <span style="font-style: italic;">"*Messages*"</span>  <span style="font-style: italic;">"files"</span>)) <span style="font-style: italic;">"*Messages*"</span>)  
+  (<span style="font-style: italic;">"c"</span> (<span style="font-weight: bold;">lambda</span> () (<span style="font-weight: bold;">interactive</span>) (select-buffer-in-tab <span style="font-style: italic;">"cooking.org"</span> <span style="font-style: italic;">"files"</span>)) <span style="font-style: italic;">"cooking"</span>)
+  (<span style="font-style: italic;">"q"</span> nil                                                               <span style="font-style: italic;">"quit"</span>))
+
+(<span style="font-weight: bold;">defun</span> <span style="font-weight: bold;">select-buffer-in-tab</span> (buffer tab)
+  <span style="font-style: italic;">"Select `</span><span style="font-weight: bold; font-style: italic; text-decoration: underline;">buffer</span><span style="font-style: italic;">' in `</span><span style="font-weight: bold; font-style: italic; text-decoration: underline;">tab</span><span style="font-style: italic;">'."</span>
+  (tab-bar-select-tab-by-name tab)
+  (switch-to-buffer buffer))
+</pre>
+</div>
+
+<p>
+One extra nice thing we can do, is that in case of chromium, and maybe other such buffers in the exwm tab, if the chromium buffer is not available, meaning we didn't start the browser yet, we can have s-f w switch to the exwm tab and start chromium at the same time,
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="font-weight: bold;">defun</span> <span style="font-weight: bold;">select-buffer-in-tab</span> (buffer tab)
+  <span style="font-style: italic;">"Select or create `</span><span style="font-weight: bold; font-style: italic; text-decoration: underline;">buffer</span><span style="font-style: italic;">' in `</span><span style="font-weight: bold; font-style: italic; text-decoration: underline;">tab</span><span style="font-style: italic;">'."</span>
+  (tab-bar-select-tab-by-name tab)
+  (<span style="font-weight: bold;">if</span> (<span style="font-weight: bold;">and</span> (equal tab <span style="font-style: italic;">"exwm"</span>)
+                   (not (get-buffer buffer)))
+          (exwm-start-app buffer)
+        (switch-to-buffer buffer)))
+</pre>
+</div>
+
+<p>
+Toggle between similar buffers in the same tab
+With tens of maybe hundreds of buffers open at the same time, it becomes difficult to switch between them. I've assigned the next-buffer and the previous-buffer to C-, and C-. for quick access for a long time now. So if I have two or three buffers that I work on at the same time, I can quickly switch between them without having to select the buffer from the buffer list with ivy each time. But there is also an improvement to this. Say you have two or three browsers opened at the same time. When you're in the exwm buffer, and you press next-buffer, you want to go from chromium -&gt; firefox -&gt; some-other-gui-app -&gt; chromium -&gt; firefox, etc. Similar to a buffer toggle but only between buffers that belong to the same tab.
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="font-weight: bold; font-style: italic;">;; </span><span style="font-weight: bold; font-style: italic;">Next and previous buffer commands look for the same major mode in case of
+</span><span style="font-weight: bold; font-style: italic;">;; </span><span style="font-weight: bold; font-style: italic;">eshell and exwm buffers.
+</span>(<span style="font-weight: bold;">bind-keys</span>
+ (<span style="font-style: italic;">"C-,"</span>           . previous-buffer-maybe-same-major-mode)
+ (<span style="font-style: italic;">"C-."</span>           . next-buffer-maybe-same-major-mode))
+
+
+(<span style="font-weight: bold;">defun</span> <span style="font-weight: bold;">next-buffer-maybe-same-major-mode</span> ()
+  <span style="font-style: italic;">"Like `</span><span style="font-weight: bold; font-style: italic; text-decoration: underline;">next-buffer</span><span style="font-style: italic;">' for buffers in the current `</span><span style="font-weight: bold; font-style: italic; text-decoration: underline;">major-mode</span><span style="font-style: italic;">'."</span>
+  (<span style="font-weight: bold;">interactive</span>)
+  (change-buffer-maybe-same-major-mode 'next-buffer))
+
+(<span style="font-weight: bold;">defun</span> <span style="font-weight: bold;">previous-buffer-maybe-same-major-mode</span> ()
+  <span style="font-style: italic;">"Like `</span><span style="font-weight: bold; font-style: italic; text-decoration: underline;">previous-buffer</span><span style="font-style: italic;">' for buffers in the current `</span><span style="font-weight: bold; font-style: italic; text-decoration: underline;">major-mode</span><span style="font-style: italic;">'."</span>
+  (<span style="font-weight: bold;">interactive</span>)
+  (change-buffer-maybe-same-major-mode 'previous-buffer))
+
+(<span style="font-weight: bold;">defun</span> <span style="font-weight: bold;">change-buffer-maybe-same-major-mode</span> (change-buffer)
+  <span style="font-style: italic;">"Call CHANGE-BUFFER until the current buffer has the initial `</span><span style="font-weight: bold; font-style: italic; text-decoration: underline;">major-mode</span><span style="font-style: italic;">'.
+Only apply this behavior on selected tabs."</span>
+  (<span style="font-weight: bold;">let</span> ((tab-name (alist-get 'name (tab-bar--current-tab))))
+        (<span style="font-weight: bold;">if</span> (member tab-name '(<span style="font-style: italic;">"eshells"</span> <span style="font-style: italic;">"exwm"</span>))          
+                (<span style="font-weight: bold;">let</span> ((mode major-mode)
+                          (original-buffer (current-buffer)))
+                  (funcall change-buffer)
+                  (<span style="font-weight: bold;">while</span> (<span style="font-weight: bold;">and</span> (not (eq major-mode mode)) (not (eq original-buffer (current-buffer))))
+                        (funcall change-buffer)))
+          (funcall change-buffer))))
+</pre>
+</div>
+
+<p>
+I'm using a method that checsk the major-mode of the current buffer and gets the next buffer with the same major-mode as the current one. Surely, this is only useful for UI buffers in the exwm tab, since they all have exwm-mode and the eshells. If you have dired buffers or similar, it might apply there to. For the files tab, which contains code from different languages, for example, it doesn't make much sense, so I'm not appling this change in this last case.
+</p>
+
+<p>
+Combine buffers belonging to different tabs
+But this brings up another problem. Sometimes you want to have a pdf or tutorial from the web side-by-side with a buffer where to try out the stuff you're reading. Or a shell right below your code buffer where you try your builds. In this case, you really do want to have buffers that naturally belong to different tabs in the same tab. Fortunately, there is an easy solution for that with the universal argument, and it only implies adding one line to the already defined switch-to-tab-based-on-mode function,
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(advice-add 'ivy--switch-buffer-action
+                        <span style="font-weight: bold;">:before</span> #'switch-to-tab-based-on-mode)
+
+(<span style="font-weight: bold;">defun</span> <span style="font-weight: bold;">switch-to-tab-based-on-mode</span> (buff)
+  <span style="font-style: italic;">"Switch to the desired tab-bar, depending on BUFF mode."</span>
+  <span style="font-weight: bold; font-style: italic;">;; </span><span style="font-weight: bold; font-style: italic;">With universal argument, do nothing, open the the buffer normally.
+</span>  (<span style="font-weight: bold;">unless</span> current-prefix-arg
+        (<span style="font-weight: bold;">or</span> (<span style="font-weight: bold;">and</span> (buffer-mode-p buff 'eshell-mode)
+                         <span style="font-weight: bold; font-style: italic;">;; </span><span style="font-weight: bold; font-style: italic;">Otherwise, open eshell buffers in the eshells tab
+</span>                         (tab-bar-eshells))
+                (<span style="font-weight: bold;">and</span> (buffer-mode-p buff 'exwm-mode)
+                         <span style="font-weight: bold; font-style: italic;">;; </span><span style="font-weight: bold; font-style: italic;">..browsers and the like in the exwm tab
+</span>                         (tab-bar-exwm))
+                <span style="font-weight: bold; font-style: italic;">;; </span><span style="font-weight: bold; font-style: italic;">...and the rest of the buffers in the files tab
+</span>                (tab-bar-files))))
+</pre>
+</div>
+
+<p>
+So calling C-u before the switch buffer command would be as if we haven't advised our switch buffer command in the first place.
+</p>
+
+<p>
+Open an eshell buffer from anywhere
+Sometimes when writing code, I want to build that said code from the command line, or want to create some folder structure directly from the command line. In short, I want to get as quickly as possible to my eshell and then back to my code,
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="font-style: italic;">"s-e"</span> . open-eshell-in-eshells-tab-here)
+
+(<span style="font-weight: bold;">defun</span> <span style="font-weight: bold;">open-eshell-in-eshells-tab-here</span> ()  
+  (<span style="font-weight: bold;">interactive</span>)
+  <span style="font-weight: bold; font-style: italic;">;;</span><span style="font-weight: bold; font-style: italic;">remember the pwd from where we've started, since we're changing tabs and
+</span>  <span style="font-weight: bold; font-style: italic;">;;</span><span style="font-weight: bold; font-style: italic;">buffers and the pwd as a result
+</span>  (<span style="font-weight: bold;">let</span> ((dir default-directory))    
+        (tab-bar-eshells)
+        (<span style="font-weight: bold;">let</span> ((default-directory dir))
+          (eshell 'new-shell))))
+</pre>
+</div>
+
+<p>
+Straightforward. I'm remembering the current working directory of the buffer I'm opening the eshell buffer from, then switch to the eshells tab and then open a new eshell buffer. One small gotcha, though. If there is already an eshell buffer opened for the exact same location, I'm not switching to it, but opening a new one. It would be nicer to reuse the same buffer, if it exists or create a new one if it doesn't,
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="font-weight: bold;">defun</span> <span style="font-weight: bold;">open-eshell-in-eshells-tab-here</span> ()  
+  <span style="font-style: italic;">"Reuse or open a new eshell in the eshells tab and switch to it.
+If there already is an eshell with the same pwd as the file we're
+opening it from, switch to it; otherwise, create a new eshell and
+set it's name accordingly."</span>
+  (<span style="font-weight: bold;">interactive</span>)
+  <span style="font-weight: bold; font-style: italic;">;;</span><span style="font-weight: bold; font-style: italic;">remember the pwd from where we've started, since we're chainging tabs and
+</span>  <span style="font-weight: bold; font-style: italic;">;;</span><span style="font-weight: bold; font-style: italic;">buffers and the pwd as a result
+</span>  (<span style="font-weight: bold;">let</span> ((dir default-directory)       
+                (existing))
+        (tab-bar-eshells)
+        (mapcar (<span style="font-weight: bold;">lambda</span> (buff)
+                          (<span style="font-weight: bold;">and</span> (equal (buffer-local-value 'default-directory buff)
+                                                  dir)
+                                   (<span style="font-weight: bold;">progn</span> (<span style="font-weight: bold;">setf</span> existing t)
+                                                  t)                
+                                   (switch-to-buffer buff)))
+                        (all-buffers-for-major-mode 'eshell-mode))
+        (<span style="font-weight: bold;">unless</span> existing
+          (<span style="font-weight: bold;">let</span> ((default-directory dir)
+                        (eshell-buffer-name (format <span style="font-style: italic;">"*eshell%s"</span> dir)))
+                (eshell 'new-shell)))))
+</pre>
+</div>
+
+<p>
+I'm also renaming the buffer to reflect its location. That way, when switching buffers with C-x b, I can easily filter the candidates. To make it consistent though, i want to change the buffer name when I change its directory with cd,
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(add-hook 'eshell-directory-change-hook
+                  (<span style="font-weight: bold;">lambda</span> ()
+                        (rename-buffer (format <span style="font-style: italic;">"*eshell%s"</span> default-directory) t)))
+</pre>
+</div>
+
+<p>
+Browse urls
+An org link can be opened directly in the browser, for example, or I sometimes google-search a selected region from code to search for some documentation. In the same vein, it would be nice if these browse functionalities would switch to the exwm bar before calling the browser. There is nothing new here,
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(advice-add 'browse-url
+                        <span style="font-weight: bold;">:before</span> (<span style="font-weight: bold;">lambda</span> (url) (tab-bar-exwm)))
+</pre>
+</div>
+
+<p>
+It's as simple as that. I'm advising the browse-url function and telling it to do its business as before, only change to the exwm tab before that.
+</p>
+
+<p>
+Multiple window configurations with registers
+I already have a nice split-up of tabs and buffers. It keeps everything in its own place, nice and clean. But usually I'll only have a few eshell buffers and a few UI buffers but most of the buffers and work in Emacs will be done in files tab. That is, writing code, sometimes for more than one project at the same time, write blog posts, taking notes, etc. I can either make new tabs for each of these setups, since on different projects I have different needs regarding the window configuration (how many splits I have, maybe I have a pdf open, or an eshell buffer together with my code). You get the point. I can certainly do that and bind some easy reached keys for each of those workspaces. Or, I can use some window registers,
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="font-weight: bold;">bind-keys</span>
+ (<span style="font-style: italic;">"C-M-u"</span> . (<span style="font-weight: bold;">lambda</span> (<span style="font-weight: bold;">interactive</span>) (window-configuration-to-register 'u)))
+ (<span style="font-style: italic;">"C-M-i"</span> . (<span style="font-weight: bold;">lambda</span> (<span style="font-weight: bold;">interactive</span>) (window-configuration-to-register 'i)))
+ (<span style="font-style: italic;">"C-M-o"</span> . (<span style="font-weight: bold;">lambda</span> (<span style="font-weight: bold;">interactive</span>) (window-configuration-to-register 'o)))
+
+ (<span style="font-style: italic;">"M-s-u"</span>  . (<span style="font-weight: bold;">lambda</span> (<span style="font-weight: bold;">interactive</span>) (jump-to-register 'u)))
+ (<span style="font-style: italic;">"M-s-i"</span>  . (<span style="font-weight: bold;">lambda</span> (<span style="font-weight: bold;">interactive</span>) (jump-to-register 'i)))
+ (<span style="font-style: italic;">"M-s-o"</span>  . (<span style="font-weight: bold;">lambda</span> (<span style="font-weight: bold;">interactive</span>) (jump-to-register 'o))))
+</pre>
+</div>
+
+<p>
+These are just wrappers around the already existing functionality. They only allow for quick saving and jumping between different window configurations, by using the exact same key but different modifiers. Easier to remember than the default C-x r w u, for setting the u register, for example.
+</p>
+
+<p>
+And that's it! I hope you can use this as an inspiration for your own setup and slowly but surely use Emacs to handle all your computing needs.
+</p>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: zyt</p>
+<p class="date">Created: 2026-04-18 六 00:50</p>
+</div>
+</body>
+</html>
