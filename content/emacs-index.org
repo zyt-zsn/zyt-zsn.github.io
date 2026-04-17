@@ -1,0 +1,5 @@
+#+TITLE: Emacs
+
+- [[file:index.org][zyt's blog site]]
+- [[file:sitemap.org][Sitemap for project homepage]]
+- [[file:Emms_Lyrics.org][Play music with lyrics in EMMS]]

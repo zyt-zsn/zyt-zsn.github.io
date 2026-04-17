@@ -1,17 +1,40 @@
 (require 'ox-publish)
-
+(require 'ob-plantuml)
 ;; Define the publishing project
+(setq org-confirm-babel-evaluate nil)
+(setq org-plantuml-jar-path (if (eq system-type 'windows-nt) "d:/EmacsConfig/plantuml.jar" "~/plantuml.jar"))
 (setq org-publish-project-alist
-      (list
-       (list "org-site"
-             :recursive t
-             :base-directory "./content"
-             :publishing-directory "./public"
-             :publishing-function 'org-html-publish-to-html
-			 :with-creator t
-			 :section-number nil
-			 :time-stamp-file nil
-			 )))
+	  `(
+		("homepage"
+		 :recursive nil
+		 :base-directory "./content"
+		 :publishing-directory "./public"
+		 :publishing-function org-html-publish-to-html
+		 :section-numbers nil
+		 :with-toc nil
+		 :with-creator t
+		 :section-number nil
+		 :time-stamp-file nil
+		 )
+		("images"
+		 :base-directory "./content"
+		 :base-extension "jpg\\|png\\|gif"
+		 :publishing-directory "./public/images"
+		 :publishing-function org-publish-attachment
+		 :recursive t
+		 )
+		("Emacs Blogs"
+		 :recursive t
+		 :base-directory "./content/EmacsBlogs"
+		 :publishing-directory "./public/EmacsBlogs"
+		 :publishing-function org-html-publish-to-html
+		 :auto-sitemap t
+		 :sitemap-title "Emacs"
+		 :sitemap-filename "emacs-index.org"
+		 :sitemap-sort-files anti-chronologically
+		 )
+		)
+	  )
 ;; Customize the HTML output
 (setq org-html-validation-link nil            ;; Don't show validation link
       org-html-head-include-scripts nil       ;; Use our own scripts

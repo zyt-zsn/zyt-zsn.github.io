@@ -1,0 +1,361 @@
+# -*- coding: utf-8-dos; -*-
+:PROPERTIES:
+:ID:       1b390354-59a4-494e-858e-011e6b1e1f5a
+:END:
+#+title: tab bar mode
+* [[https://mihaiolteanu.me/emacs-workspace-management][Emacs workspace management with tab-bar mode]]
+
+	  Emacs workspace management with tab-bar mode
+	  While using Emacs only for text editing I've switched between it, the Terminal Emulator and the Browser pretty much like on a Windows system: Alt+Tab. But after slowly incorporating both eshell and then exwm into my configuration and workflow, I kinda wanted that behavior back. In short, keeping all shell stuff in a separate window and instantly switching to it. Same with the browser and the rest of the UI stuff. I've tried tab-mode and knew instantly that it's what I want. Used straight out of the box though, it doesn't fulfill all my needs: switching to a buffer or browsing an url doesn't automatically change the tab, for example. So I've added that functionality and some others goodies to ease the management of buffers. Below is a setup, that though highly opinionated, is completely functional. You can adapt it for your own needs.
+
+	  Gather all similar buffers in their own tabs
+	  The tab-bar mode enables one to have as many tabs as one wants on each Emacs frame. This is similar to what we have in standard text editors or in browsers. The great thing is that each tab contains not just a single buffer but a window configuration. That is, I can split my window into multiple buffers, save it as a tab and give it a name. Switch to a different tab and I have a different set of buffers split differently. It is the perfect place to have a tab containing all my shells, a tab containing code and org files and one containing the browser, pdf viewers or music players. I am using exwm, but you don't need to. What follows still applies to a non-exwm setup, only with different tabs and functionalities. With that, let's start coding.
+
+	  Since, for some reason or another, my tabs are not saved after I exit Emacs, even though I have the desktop-save-mode enabled, I'm making sure I have the tabs I need every time I start Emacs,
+
+	  #+begin_src emacs-lisp
+		;; Ensure the needed tabs are created or exist; add extra to your liking
+		(progn (tab-create "files")
+			   (tab-create "eshells")
+			   (tab-create "exwm"))
+		
+		(defun tab-create (name)
+		  "Create the NAME tab if it doesn't exist already."
+		  (condition-case nil
+			  (unless (equal (alist-get 'name (tab-bar--current-tab))
+							 name)
+				(tab-bar-rename-tab-by-name name name))
+			(error (tab-new)
+				   (tab-bar-rename-tab name))))
+
+		;; Hide the tabs since I don't want to click on them.
+		(setf tab-bar-show nil)
+	  #+end_src
+
+	  I have only three tabs, one for all the eshells, one for UI buffers, like browsers, pdf viewers, video players, etc. and one for the "normal" buffers, like code, org files and the like. I'm also hiding the tab bar so that after setting all up it doesn't even matter what package I'm using to organize all of this. I don't want it to get in my way. I just want to switch buffers seamlessly without even thinking about it.
+
+	  How to quickly switch to a different tab? I've defined some extra interactive functions that are just wrappers around the build-in method for changing the tabs, since I will use this feature in other places as well,
+	  #+begin_src emacs-lisp
+		(defun tab-bar-files ()
+		  "Select the files tab-bar. Force return `t'."
+		  (interactive)
+		  (tab-bar-select-tab-by-name "files")
+		  t)
+
+		(defun tab-bar-eshells ()
+		  "Select the eshells tab-bar. Force return `t'."
+		  (interactive)
+		  (tab-bar-select-tab-by-name "eshells")
+		  t)
+
+		(defun tab-bar-exwm ()
+		  "Select the wm tab-bar. Force return `t'."
+		  (interactive)
+		  (tab-bar-select-tab-by-name "exwm")
+		  t)
+
+		(bind-keys
+		 ("s-F" . tab-bar-files)
+		 ("s-W" . tab-bar-exwm)
+		 ("s-Z" . tab-bar-eshells))
+	  #+end_src
+
+	  I'm also binding some keys to these functions. I'm using a programmable keyboard, so I have plenty of keys to choose from. My binding is actually C-x t F but the action I need to take is just pressing one of the big thumb cluster keys and f. I want my most used commands to be reachable with the fewest keys possible.
+
+	  Open existing buffers in the correct tab
+	  The previous setup takes care of grouping the buffers in their respective tabs and switching to the tabs whenever I need to switch between code, shell and browser.
+
+	  The next step is to open buffers into their correct tab regardless of the tab that I'm currently located in. That is, if I'm using the browser and I'm in the exwm tab, for example, and I want to switch buffers with C-x b (ivy-switch-buffer in my case), and select an eshell buffer from the list of available buffers, I want it to open in the eshell tab automatically and not in the exwm tab I'm currently in. Otherwise I will soon get an ugly mix of buffers everywhere or I'll have to pay attention and switch to the correct tab every time I want to switch buffers. Not so pretty. So how do I do it?
+
+	  I'm advising the function that does the buffer switching. How does advising work? Let's say I have a package defining a function myf,
+	  #+begin_src emacs-lisp
+		(defun myf (n)
+		  (message "The number: %d" 5))
+
+		;; Eval and check the *Messages* buffer
+		(myf 5)
+
+	  #+end_src
+
+	  #+RESULTS:
+	  : The number: 5
+
+
+	  Assume I want to modify this function and have it print out my own message before its message. Something like this,
+	  #+begin_src emacs-lisp
+		(defun myf (n)
+		  (message "I've called myf with argument %d" n)
+		  (message "The number: %d" 5))
+
+		;; Eval and check the *Messages* buffer
+		(myf 5)
+	  #+end_src
+
+	  #+RESULTS:
+	  : The number: 5
+
+	  I’ve called myf with argument 5
+	  The number: 5
+
+	  It gets the job done. But if the package owner updates myf function in the future, and the said package depends on this new updated function for its behavior, I will be left with the old implementation + my code. That's bad. I would have to copy the new function and add my code to it every time this kind of thing happens otherwise things might start to fall apart. There is a better approach with advice's,
+	  #+begin_src emacs-lisp
+		(defun myf (n)
+		  (message "The number: %d" 5))
+
+		(myf 5)
+		;; The number: 5
+
+		(advice-add 'myf
+					:before (lambda (n)
+							  (message "I've called myf with argument %d" n)))
+		(myf 5)
+	  #+end_src
+
+	  #+RESULTS:
+	  : The number: 5
+
+	  I’ve called myf with argument 5
+	  The number: 5
+
+	  Concretely, I've called advice-add with my function as a symbol, together with a new function of one argument, since the original myf function also expects one argument, and the keyword :before. The result is exactly the same as the previous attempt where I've modified the function itself. But the advantage is greater with advising, since if the package containing myf gets updated, I don't have to modify anything to get the same behavior I want,
+	  #+begin_src emacs-lisp
+		(defun myf (n)
+		  (message "The number is: %d" 5))
+
+		(myf 5)
+	  #+end_src
+
+	  #+RESULTS:
+	  : The number is: 5
+
+	  I’ve called myf with argument 5
+	  The number is: 5
+
+	  I get my own message as before, plus the updated message from myf. This is perfect!
+
+	  I can use this great feature to advice the function that does the buffer switching, in my case ivy-switch-buffer but you should adapt it for your own needs. That is, I want to make sure I open the buffer in the correct tab, so I don't have to manually switch tabs before actually opening the buffer. Looking at it in detail, advising ivy-switch-buffer is a bit wrong, since that function only opens a list of buffers for narrowing and selection and does not make the buffer selection itself. The correct function to advice is the function that gets called once I select a buffer. So I call C-h f ivy-switch-buffer and check it's definition,
+	  #+begin_src emacs-lisp
+		(defun ivy-switch-buffer ()
+		  "Switch to another buffer."
+		  (interactive)
+		  (ivy-read "Switch to buffer: " #'internal-complete-buffer
+					:keymap ivy-switch-buffer-map
+					:preselect (buffer-name (other-buffer (current-buffer)))
+					:action #'ivy--switch-buffer-action
+					:matcher #'ivy--switch-buffer-matcher
+					:caller 'ivy-switch-buffer))
+	  #+end_src
+
+	  Ok, the function I'm interested in is ivy--switch-buffer-action. That's an internal function and ideally I should not depend or use it in any way, but I went for it in this case, anyway. So now I have this,
+	  #+begin_src emacs-lisp
+		;; Make sure `ivy-switch-buffer' opens each buffer in it's correct tab,
+		;; depending on its mode.
+		(advice-add 'ivy--switch-buffer-action
+					:before #'switch-to-tab-based-on-mode)
+
+		(defun switch-to-tab-based-on-mode (buff)
+		  "Switch to the desired tab-bar, depending on BUFF mode."  
+		  (or (and (buffer-mode-p buff 'eshell-mode)
+				   ;; open eshell buffers in the eshells tab
+				   (tab-bar-eshells))
+			  (and (buffer-mode-p buff 'exwm-mode)
+				   ;; ..browsers and the like in the exwm tab
+				   (tab-bar-exwm))
+			  ;; ...and the rest of the buffers in the files tab
+			  (tab-bar-files)))
+
+		(defun buffer-mode-p (buffer-or-string mode)
+		  "Returns the major mode associated with a buffer."
+		  (with-current-buffer buffer-or-string
+			(equal major-mode mode)))
+	  #+end_src
+
+	  I hope that is clear. Before calling ivy--switch-buffer-action, which is the function invoked when I press RET on the buffers list, I want to switch to the correct tab based on the buffer's major mode. So if I'm writing some piece of code in the files tab and I want to switch to an eshell buffer to build my project, let's say, that would automatically change the tab bar to eshells. Pretty neat. This is, of course, assuming I got the correct eshell buffer already open in my eshells tab. But I'll get to that in a moment.
+
+	  Open new buffers in the correct tab
+	  Its a similar story when opening new files. I've shown how we can handle switching buffers. That is one command. But it would be useful if say, I'm in an eshell buffer and want to open a file, either interactively (counsel-find-file, for example), or directly from the command line with find-file. These are different commands than the one I've advised before. Surely, I'd want that new buffer to get thrown in the files tab and not poison my healthy eshells tab,
+	  #+begin_src emacs-lisp
+		(advice-add 'find-file
+					:around #'find-file-in-the-files-tab-advice)
+
+		(defun find-file-in-the-files-tab-advice (orig-func filename &rest wildcards)
+		  "Open FILENAME in the files tab."
+		  (let ((dir default-directory))
+			(tab-bar-select-tab-by-name "files")
+			(let ((default-directory dir))
+			  (apply orig-func filename wildcards))))
+	  #+end_src
+
+	  Honestly, I can't tell why I haven't used a :before advice in this case, as well. Maybe there really is a reason and I'm not planing on fiddling with it now since I'm writing this way after the fact. The :around advice is a little more complicated, but not conceptually. While in the previous advice, my new function gets the argument passed when calling the original function, in this case I also get the original function itself. It now depends on me to actually call the original function after I did my job (or before, or between, it's my choice, really), whereas before the original function was automatically called for me after my new function, as the name implies. You can play around with some examples. It really is neat and easy to grasp once you've seen an example or two.
+
+	  Quick access to important files/buffers
+	  One thing I like to have is the ability to quickly open any of the most used/visited buffers, like init.el, the *scratch* buffer, the browser or my notes.org. That is, I don't want to have to search through a list of all opened buffers everytime I want to switch to any one of those. I want a quick access key combination for that,
+	  #+begin_src emacs-lisp
+		(defhydra hydra-file (:exit t)
+		  ("w" (lambda () (interactive) (switch-to-buffer "chromium" )) "browser")
+		  ("s" (lambda () (interactive) (switch-to-buffer "*scratch*")) "*scratch*")
+		  ("i" (lambda () (interactive) (switch-to-buffer "init.el"  )) "init.el")  
+		  ("c" (lambda () (interactive) (switch-to-buffer "notes.org")) "notes")
+		  ("q" nil                                                      "quit"))
+
+		(bind-key ("s-f" . hydra-file/body))
+	  #+end_src
+
+	  So s-f w goes to the chromium buffer, s-f i to the init.el buffer, etc. But I get the same problem as before, meaning, I want to quickly go to these buffers but at the same time let Emacs automatically switch tabs for me. So instead of switch-to-buffer we can have a function that switches tabs first, and only then calls switch-to-buffer. I have tried to advice the switch-to-buffer function itself, but I get some unwanted side-effects. I assume it is because that function is used in a whole lot of places and in different packages to do maybe some non-orthodox stuff, unlike the ivy one you've seen before which is used only by the ivy package. Since there are, presumably, only a few very important buffers, we can do something like this,
+	  #+begin_src emacs-lisp
+		(defhydra hydra-file (:exit t)
+		  ("w" (lambda () (interactive) (select-buffer-in-tab "chromium"    "exwm"))  "browser")
+		  ("s" (lambda () (interactive) (select-buffer-in-tab "*scratch*"   "files")) "*scratch*")
+		  ("i" (lambda () (interactive) (select-buffer-in-tab "init.el"     "files")) "init.el")
+		  ("m" (lambda () (interactive) (select-buffer-in-tab "*Messages*"  "files")) "*Messages*")  
+		  ("c" (lambda () (interactive) (select-buffer-in-tab "cooking.org" "files")) "cooking")
+		  ("q" nil                                                               "quit"))
+
+		(defun select-buffer-in-tab (buffer tab)
+		  "Select `buffer' in `tab'."
+		  (tab-bar-select-tab-by-name tab)
+		  (switch-to-buffer buffer))
+	  #+end_src
+
+	  One extra nice thing we can do, is that in case of chromium, and maybe other such buffers in the exwm tab, if the chromium buffer is not available, meaning we didn't start the browser yet, we can have s-f w switch to the exwm tab and start chromium at the same time,
+	  #+begin_src emacs-lisp
+		(defun select-buffer-in-tab (buffer tab)
+		  "Select or create `buffer' in `tab'."
+		  (tab-bar-select-tab-by-name tab)
+		  (if (and (equal tab "exwm")
+				   (not (get-buffer buffer)))
+			  (exwm-start-app buffer)
+			(switch-to-buffer buffer)))
+	  #+end_src
+
+	  Toggle between similar buffers in the same tab
+	  With tens of maybe hundreds of buffers open at the same time, it becomes difficult to switch between them. I've assigned the next-buffer and the previous-buffer to C-, and C-. for quick access for a long time now. So if I have two or three buffers that I work on at the same time, I can quickly switch between them without having to select the buffer from the buffer list with ivy each time. But there is also an improvement to this. Say you have two or three browsers opened at the same time. When you're in the exwm buffer, and you press next-buffer, you want to go from chromium -> firefox -> some-other-gui-app -> chromium -> firefox, etc. Similar to a buffer toggle but only between buffers that belong to the same tab.
+	  #+begin_src emacs-lisp
+		;; Next and previous buffer commands look for the same major mode in case of
+		;; eshell and exwm buffers.
+		(bind-keys
+		 ("C-,"           . previous-buffer-maybe-same-major-mode)
+		 ("C-."           . next-buffer-maybe-same-major-mode))
+
+
+		(defun next-buffer-maybe-same-major-mode ()
+		  "Like `next-buffer' for buffers in the current `major-mode'."
+		  (interactive)
+		  (change-buffer-maybe-same-major-mode 'next-buffer))
+
+		(defun previous-buffer-maybe-same-major-mode ()
+		  "Like `previous-buffer' for buffers in the current `major-mode'."
+		  (interactive)
+		  (change-buffer-maybe-same-major-mode 'previous-buffer))
+
+		(defun change-buffer-maybe-same-major-mode (change-buffer)
+		  "Call CHANGE-BUFFER until the current buffer has the initial `major-mode'.
+		Only apply this behavior on selected tabs."
+		  (let ((tab-name (alist-get 'name (tab-bar--current-tab))))
+			(if (member tab-name '("eshells" "exwm"))          
+				(let ((mode major-mode)
+					  (original-buffer (current-buffer)))
+				  (funcall change-buffer)
+				  (while (and (not (eq major-mode mode)) (not (eq original-buffer (current-buffer))))
+					(funcall change-buffer)))
+			  (funcall change-buffer))))
+	  #+end_src
+
+	  I'm using a method that checsk the major-mode of the current buffer and gets the next buffer with the same major-mode as the current one. Surely, this is only useful for UI buffers in the exwm tab, since they all have exwm-mode and the eshells. If you have dired buffers or similar, it might apply there to. For the files tab, which contains code from different languages, for example, it doesn't make much sense, so I'm not appling this change in this last case.
+
+	  Combine buffers belonging to different tabs
+	  But this brings up another problem. Sometimes you want to have a pdf or tutorial from the web side-by-side with a buffer where to try out the stuff you're reading. Or a shell right below your code buffer where you try your builds. In this case, you really do want to have buffers that naturally belong to different tabs in the same tab. Fortunately, there is an easy solution for that with the universal argument, and it only implies adding one line to the already defined switch-to-tab-based-on-mode function,
+	  #+begin_src emacs-lisp
+		(advice-add 'ivy--switch-buffer-action
+					:before #'switch-to-tab-based-on-mode)
+
+		(defun switch-to-tab-based-on-mode (buff)
+		  "Switch to the desired tab-bar, depending on BUFF mode."
+		  ;; With universal argument, do nothing, open the the buffer normally.
+		  (unless current-prefix-arg
+			(or (and (buffer-mode-p buff 'eshell-mode)
+					 ;; Otherwise, open eshell buffers in the eshells tab
+					 (tab-bar-eshells))
+				(and (buffer-mode-p buff 'exwm-mode)
+					 ;; ..browsers and the like in the exwm tab
+					 (tab-bar-exwm))
+				;; ...and the rest of the buffers in the files tab
+				(tab-bar-files))))
+	  #+end_src
+
+	  So calling C-u before the switch buffer command would be as if we haven't advised our switch buffer command in the first place.
+
+	  Open an eshell buffer from anywhere
+	  Sometimes when writing code, I want to build that said code from the command line, or want to create some folder structure directly from the command line. In short, I want to get as quickly as possible to my eshell and then back to my code,
+	  #+begin_src emacs-lisp
+		("s-e" . open-eshell-in-eshells-tab-here)
+
+		(defun open-eshell-in-eshells-tab-here ()  
+		  (interactive)
+		  ;;remember the pwd from where we've started, since we're changing tabs and
+		  ;;buffers and the pwd as a result
+		  (let ((dir default-directory))    
+			(tab-bar-eshells)
+			(let ((default-directory dir))
+			  (eshell 'new-shell))))
+	  #+end_src
+
+	  Straightforward. I'm remembering the current working directory of the buffer I'm opening the eshell buffer from, then switch to the eshells tab and then open a new eshell buffer. One small gotcha, though. If there is already an eshell buffer opened for the exact same location, I'm not switching to it, but opening a new one. It would be nicer to reuse the same buffer, if it exists or create a new one if it doesn't,
+
+	  #+begin_src emacs-lisp
+		(defun open-eshell-in-eshells-tab-here ()  
+		  "Reuse or open a new eshell in the eshells tab and switch to it.
+		If there already is an eshell with the same pwd as the file we're
+		opening it from, switch to it; otherwise, create a new eshell and
+		set it's name accordingly."
+		  (interactive)
+		  ;;remember the pwd from where we've started, since we're chainging tabs and
+		  ;;buffers and the pwd as a result
+		  (let ((dir default-directory)       
+				(existing))
+			(tab-bar-eshells)
+			(mapcar (lambda (buff)
+					  (and (equal (buffer-local-value 'default-directory buff)
+								  dir)
+						   (progn (setf existing t)
+								  t)                
+						   (switch-to-buffer buff)))
+					(all-buffers-for-major-mode 'eshell-mode))
+			(unless existing
+			  (let ((default-directory dir)
+					(eshell-buffer-name (format "*eshell%s" dir)))
+				(eshell 'new-shell)))))
+	  #+end_src
+
+	  I'm also renaming the buffer to reflect its location. That way, when switching buffers with C-x b, I can easily filter the candidates. To make it consistent though, i want to change the buffer name when I change its directory with cd,
+	  #+begin_src emacs-lisp
+		(add-hook 'eshell-directory-change-hook
+				  (lambda ()
+					(rename-buffer (format "*eshell%s" default-directory) t)))
+	  #+end_src
+
+	  Browse urls
+	  An org link can be opened directly in the browser, for example, or I sometimes google-search a selected region from code to search for some documentation. In the same vein, it would be nice if these browse functionalities would switch to the exwm bar before calling the browser. There is nothing new here,
+	  #+begin_src emacs-lisp
+		(advice-add 'browse-url
+					:before (lambda (url) (tab-bar-exwm)))
+	  #+end_src
+
+	  It's as simple as that. I'm advising the browse-url function and telling it to do its business as before, only change to the exwm tab before that.
+
+	  Multiple window configurations with registers
+	  I already have a nice split-up of tabs and buffers. It keeps everything in its own place, nice and clean. But usually I'll only have a few eshell buffers and a few UI buffers but most of the buffers and work in Emacs will be done in files tab. That is, writing code, sometimes for more than one project at the same time, write blog posts, taking notes, etc. I can either make new tabs for each of these setups, since on different projects I have different needs regarding the window configuration (how many splits I have, maybe I have a pdf open, or an eshell buffer together with my code). You get the point. I can certainly do that and bind some easy reached keys for each of those workspaces. Or, I can use some window registers,
+	  #+begin_src emacs-lisp
+		(bind-keys
+		 ("C-M-u" . (lambda (interactive) (window-configuration-to-register 'u)))
+		 ("C-M-i" . (lambda (interactive) (window-configuration-to-register 'i)))
+		 ("C-M-o" . (lambda (interactive) (window-configuration-to-register 'o)))
+
+		 ("M-s-u"  . (lambda (interactive) (jump-to-register 'u)))
+		 ("M-s-i"  . (lambda (interactive) (jump-to-register 'i)))
+		 ("M-s-o"  . (lambda (interactive) (jump-to-register 'o))))
+	  #+end_src
+
+	  These are just wrappers around the already existing functionality. They only allow for quick saving and jumping between different window configurations, by using the exact same key but different modifiers. Easier to remember than the default C-x r w u, for setting the u register, for example.
+
+	  And that's it! I hope you can use this as an inspiration for your own setup and slowly but surely use Emacs to handle all your computing needs.

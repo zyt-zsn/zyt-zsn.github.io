@@ -1,0 +1,4 @@
+#+TITLE: Sitemap for project homepage
+
+- [[file:Emms_Lyrics.org][Play music with lyrics in EMMS]]
+- [[file:index.org][zyt's blog site]]
