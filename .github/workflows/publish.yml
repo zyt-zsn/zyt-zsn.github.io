@@ -21,6 +21,9 @@ jobs:
       - name: Install jre
         run: sudo apt install default-jre --yes
 
+      - name: Install wget
+        run: sudo apt install wget --yes
+
       - name: Chmod Build Script
         run: sudo chmod +x ./build.sh
 
