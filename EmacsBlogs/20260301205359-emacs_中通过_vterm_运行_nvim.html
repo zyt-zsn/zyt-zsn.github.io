@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2026-04-18 Sat 15:16 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>emacs 中通过 vterm 运行 nvim</title>
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css" />
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">emacs 中通过 vterm 运行 nvim</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org0134fad">1. nvim对其字体问题</a></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org0134fad" class="outline-2">
+<h2 id="org0134fad"><span class="section-number-2">1.</span> nvim对其字体问题</h2>
+<div class="outline-text-2" id="text-1">
+<ol class="org-ol">
+<li>安装更纱终端字体(<code>SarasaTermSCNerd</code>)
+<a href="https://github.com/laishulu/Sarasa-Term-SC-Nerd">https://github.com/laishulu/Sarasa-Term-SC-Nerd</a>
+下载解压至 ~/.fonts</li>
+<li><p>
+通过hook方式设置vtem <code>buffer-specific default face</code> 字体为 <code>Sarasa Term SC Nerd</code>
+详见 buffer-face-mode 的帮助文档 
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="font-weight: bold;">use-package</span> vterm
+  <span style="font-weight: bold;">:straight</span> t
+  <span style="font-weight: bold;">:commands</span> (vterm)
+  <span style="font-weight: bold;">:hook</span> (vterm-mode .
+                                   (<span style="font-weight: bold;">lambda</span> ()
+                                     (set (make-local-variable 'buffer-face-mode-face) '(<span style="font-weight: bold;">:family</span> <span style="font-style: italic;">"Sarasa Term SC Nerd"</span>))
+                                     (buffer-face-mode t)))
+  )
+</pre>
+</div></li>
+<li>启动vterm后，通过C-u C-x = 确认 vterm buffer的文字的确采用了更纱终端字体 
+注意：此时要在 <code>vterm(nvim)</code> 中通过 <code>chord nn</code> ，从 切换 emacs 至 <code>normal state</code></li>
+<li><code>通过 text-scale-adjust 调整至合适字号</code> (特定字号时 <code>汉字</code> 和 <code>字母</code> 才能对齐)</li>
+<li><p>
+对某些未正常采用更纱终端字体显示的字符进行特殊处理，比如
+a. 更纱终端字体包含了, 但 <code>默认</code> 未采用更纱终端字体的字符
+    <code></code> <i>home/zyt</i>.config/kitty/kitty.conf~ 
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(set-fontset-font <span style="font-style: italic;">"fontset-default"</span> #xF0F6 <span style="font-style: italic;">"Sarasa Term SC Nerd"</span>)
+<span style="font-weight: bold; font-style: italic;">;; </span><span style="font-weight: bold; font-style: italic;">;; or
+</span><span style="font-weight: bold; font-style: italic;">;; </span><span style="font-weight: bold; font-style: italic;">(set-fontset-font "fontset-default" #xF0F6 "&#26356;&#32433;&#32456;&#31471;&#20070;&#21574;&#40657;&#20307;-&#31616;")</span>
+</pre>
+</div>
+
+<p>
+b. 更纱终端字体未包含的字符,更换为其他能显示的字符集
+   a) symlink<sub>arrow</sub> = " <code>➛</code> "       
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(set-fontset-font <span style="font-style: italic;">"fontset-default"</span> #x279B <span style="font-style: italic;">"DAMA-Ubuntu Sans Mono"</span>)
+</pre>
+</div>
+<p>
+     <img src="nvim对其字体问题/2026-03-01_22-36-47_screenshot.png" alt="2026-03-01_22-36-47_screenshot.png" />
+b) <code>󱡠</code> (#xF1860) in which-key prompt
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(set-fontset-font <span style="font-style: italic;">"fontset-default"</span> #xF1860 <span style="font-style: italic;">"CaskaydiaCove Nerd Font Mono"</span>)
+</pre>
+</div>
+
+<div id="org2d2b36b" class="figure">
+<p><img src="nvim对其字体问题/2026-03-01_22-54-34_screenshot.png" alt="2026-03-01_22-54-34_screenshot.png" />
+</p>
+</div></li>
+</ol>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Created: 2026-04-18 Sat 15:16</p>
+</div>
+</body>
+</html>
