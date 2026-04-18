@@ -18,6 +18,9 @@ jobs:
       - name: Install Emacs
         run: sudo apt install emacs-nox --yes
 
+      - name: Install jre
+        run: sudo apt install default-jre --yes
+
       - name: Chmod Build Script
         run: sudo chmod +x ./build.sh
 
