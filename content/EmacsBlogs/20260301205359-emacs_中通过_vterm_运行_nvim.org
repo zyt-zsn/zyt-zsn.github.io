@@ -1,0 +1,50 @@
+:PROPERTIES:
+:ID:       64481f20-f579-4f70-9b23-c5f57b0cd3c4
+:END:
+#+title: emacs 中通过 vterm 运行 nvim
+* nvim对其字体问题
+:PROPERTIES:
+:ID:       1837e86a-7923-4d62-b829-ed6771ba9c76
+:END:
+1. 安装更纱终端字体(=SarasaTermSCNerd=)
+   https://github.com/laishulu/Sarasa-Term-SC-Nerd
+   下载解压至 ~/.fonts
+2. 通过hook方式设置vtem =buffer-specific default face= 字体为 =Sarasa Term SC Nerd=
+   详见 buffer-face-mode 的帮助文档 
+   #+begin_src emacs-lisp
+     (use-package vterm
+       :straight t
+       :commands (vterm)
+       :hook (vterm-mode .
+     					(lambda ()
+     					  (set (make-local-variable 'buffer-face-mode-face) '(:family "Sarasa Term SC Nerd"))
+     					  (buffer-face-mode t)))
+       )
+   #+end_src
+3. 启动vterm后，通过C-u C-x = 确认 vterm buffer的文字的确采用了更纱终端字体 
+   注意：此时要在 =vterm(nvim)= 中通过 =chord nn= ，从 切换 emacs 至 =normal state=
+4. ~通过 text-scale-adjust 调整至合适字号~ (特定字号时 =汉字= 和 =字母= 才能对齐)
+5. 对某些未正常采用更纱终端字体显示的字符进行特殊处理，比如
+   a. 更纱终端字体包含了, 但 =默认= 未采用更纱终端字体的字符
+       ~~ /home/zyt/.config/kitty/kitty.conf~ 
+       #+begin_src emacs-lisp
+	 (set-fontset-font "fontset-default" #xF0F6 "Sarasa Term SC Nerd")
+	 ;; ;; or
+	 ;; (set-fontset-font "fontset-default" #xF0F6 "更纱终端书呆黑体-简")
+       #+end_src
+
+   b. 更纱终端字体未包含的字符,更换为其他能显示的字符集
+      a) symlink_arrow = " ~➛~ "       
+	  #+begin_src emacs-lisp
+	  (set-fontset-font "fontset-default" #x279B "DAMA-Ubuntu Sans Mono")
+	  #+end_src
+	   #+DOWNLOADED: screenshot @ 2026-03-01 22:36:47
+	   #+ATTR_ORG: :width 1000
+	   [[file:nvim对其字体问题/2026-03-01_22-36-47_screenshot.png]]
+      b) =󱡠= (#xF1860) in which-key prompt
+	 #+begin_src emacs-lisp
+	   (set-fontset-font "fontset-default" #xF1860 "CaskaydiaCove Nerd Font Mono")
+	 #+end_src
+	   #+DOWNLOADED: screenshot @ 2026-03-01 22:54:34
+	   #+ATTR_ORG: :width 1000
+	   [[file:nvim对其字体问题/2026-03-01_22-54-34_screenshot.png]]

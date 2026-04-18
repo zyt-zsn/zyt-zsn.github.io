@@ -1,4 +1,5 @@
 #+TITLE: Emacs
 
+- [[file:20260301205359-emacs_中通过_vterm_运行_nvim.org][emacs 中通过 vterm 运行 nvim]]
 - [[file:20250302100324-tab_bar_mode.org][tab bar mode]]
 - [[file:20240109163027-ai_hub.org][AI-HUB]]
