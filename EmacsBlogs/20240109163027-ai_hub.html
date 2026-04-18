@@ -3,11 +3,10 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2026-04-18 六 00:50 -->
+<!-- 2026-04-18 Sat 13:23 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>AI-HUB</title>
-<meta name="author" content="zyt" />
 <meta name="generator" content="Org Mode" />
 <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css" />
 </head>
@@ -18,64 +17,65 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org0a691ee">1. AI-HUB</a>
+<li><a href="#org878e800">1. AI-HUB</a>
 <ul>
-<li><a href="#orged0c3b1">1.1. 证件分类</a></li>
-<li><a href="#orgd1bd39e">1.2. 上送数据丢失</a></li>
-<li><a href="#org85894ec">1.3. UI优化</a>
+<li><a href="#org8077f5d">1.1. 证件分类</a></li>
+<li><a href="#orgc78c1cd">1.2. 上送数据丢失</a></li>
+<li><a href="#org12bab83">1.3. UI优化</a>
 <ul>
-<li><a href="#org503ff1f">1.3.1. 根据历史成功识别证件的区域坐标修正区域提示框</a></li>
-<li><a href="#orgc5a6378">1.3.2. 去掉主动超时机制，改为“经过一定时间后”由酒店前台主动取消</a></li>
-<li><a href="#org701a051">1.3.3. 流程图</a></li>
+<li><a href="#orgf424fe0">1.3.1. 根据历史成功识别证件的区域坐标修正区域提示框</a></li>
+<li><a href="#org68775a0">1.3.2. 去掉主动超时机制，改为“经过一定时间后”由酒店前台主动取消</a></li>
+<li><a href="#org83be13d">1.3.3. 流程图</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#org815cd86">2. 天旅&#xa0;&#xa0;&#xa0;<span class="tag"><span class="ATTACH">ATTACH</span></span></a>
+<li><a href="#orga1693b0">2. 天旅&#xa0;&#xa0;&#xa0;<span class="tag"><span class="ATTACH">ATTACH</span></span></a>
 <ul>
-<li><a href="#org3e37e07">2.1. 旅客信息表</a></li>
-<li><a href="#org2880d37">2.2. 方案</a>
+<li><a href="#orgd095287">2.1. 旅客信息表</a></li>
+<li><a href="#orgcc77a60">2.2. 方案</a>
 <ul>
-<li><a href="#org8551b4c">2.2.1. 数据库唯一性检测方案</a></li>
-<li><a href="#org41afdbc">2.2.2. 天旅和AI-HUB动态绑定方案</a></li>
+<li><a href="#orge346b8c">2.2.1. 数据库唯一性检测方案</a></li>
+<li><a href="#org9d116d0">2.2.2. 天旅和AI-HUB动态绑定方案</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#orgac23fbc">3. 问题证件分析</a>
+<li><a href="#org9a52652">3. 问题证件分析</a>
 <ul>
-<li><a href="#org011c236">3.1. 香港身份证</a>
+<li><a href="#org4b6045c">3.1. 香港身份证</a>
 <ul>
-<li><a href="#org2504b72">3.1.1. 机读码解析</a></li>
+<li><a href="#org45b9a1a">3.1.1. 机读码解析</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#org73cbe14">4. 规范</a>
+<li><a href="#org880fbe6">4. 规范</a>
 <ul>
-<li><a href="#org0530ccf">4.1. ICAO 9303</a></li>
+<li><a href="#orgd99ed4c">4.1. ICAO 9303</a></li>
 </ul>
 </li>
-<li><a href="#orgbf3a682">5. 社采&amp;AI-HUB安全方案</a></li>
-<li><a href="#org40c8d4a">6. AI-HUB &amp; Client 授权方案</a></li>
+<li><a href="#orgbc995b7">5. 社采&amp;AI-HUB安全方案</a></li>
+<li><a href="#org974fd29">6. AI-HUB &amp; Client 授权方案</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org0a691ee" class="outline-2">
-<h2 id="org0a691ee"><span class="section-number-2">1.</span> AI-HUB</h2>
+<div id="outline-container-org878e800" class="outline-2">
+<h2 id="org878e800"><span class="section-number-2">1.</span> AI-HUB</h2>
 <div class="outline-text-2" id="text-1">
 </div>
-<div id="outline-container-orged0c3b1" class="outline-3">
-<h3 id="orged0c3b1"><span class="section-number-3">1.1.</span> 证件分类</h3>
+
+<div id="outline-container-org8077f5d" class="outline-3">
+<h3 id="org8077f5d"><span class="section-number-3">1.1.</span> 证件分类</h3>
 </div>
-<div id="outline-container-orgd1bd39e" class="outline-3">
-<h3 id="orgd1bd39e"><span class="section-number-3">1.2.</span> 上送数据丢失</h3>
+<div id="outline-container-orgc78c1cd" class="outline-3">
+<h3 id="orgc78c1cd"><span class="section-number-3">1.2.</span> 上送数据丢失</h3>
 </div>
-<div id="outline-container-org85894ec" class="outline-3">
-<h3 id="org85894ec"><span class="section-number-3">1.3.</span> UI优化</h3>
+<div id="outline-container-org12bab83" class="outline-3">
+<h3 id="org12bab83"><span class="section-number-3">1.3.</span> UI优化</h3>
 <div class="outline-text-3" id="text-1-3">
 
-<div id="org5459dcc" class="figure">
+<div id="org08067a4" class="figure">
 <p><img src="../images/test.png" alt="test.png" />
 </p>
 </div>
@@ -97,25 +97,26 @@
 </div>
 
 
-<div id="org9a673cc" class="figure">
+<div id="org8e29bab" class="figure">
 <p><img src="../images/./plantuml-szY4Dp.png" alt="plantuml-szY4Dp.png" />
 </p>
 </div>
 </div>
-<div id="outline-container-org503ff1f" class="outline-4">
-<h4 id="org503ff1f"><span class="section-number-4">1.3.1.</span> 根据历史成功识别证件的区域坐标修正区域提示框</h4>
+
+<div id="outline-container-orgf424fe0" class="outline-4">
+<h4 id="orgf424fe0"><span class="section-number-4">1.3.1.</span> 根据历史成功识别证件的区域坐标修正区域提示框</h4>
 </div>
 
-<div id="outline-container-orgc5a6378" class="outline-4">
-<h4 id="orgc5a6378"><span class="section-number-4">1.3.2.</span> 去掉主动超时机制，改为“经过一定时间后”由酒店前台主动取消</h4>
+<div id="outline-container-org68775a0" class="outline-4">
+<h4 id="org68775a0"><span class="section-number-4">1.3.2.</span> 去掉主动超时机制，改为“经过一定时间后”由酒店前台主动取消</h4>
 </div>
 
-<div id="outline-container-org701a051" class="outline-4">
-<h4 id="org701a051"><span class="section-number-4">1.3.3.</span> 流程图</h4>
+<div id="outline-container-org83be13d" class="outline-4">
+<h4 id="org83be13d"><span class="section-number-4">1.3.3.</span> 流程图</h4>
 <div class="outline-text-4" id="text-1-3-3">
 </div>
 <ol class="org-ol">
-<li><a id="orgb49b797"></a>OCR识别类<br />
+<li><a id="org1401df3"></a>OCR识别类<br />
 <div class="outline-text-5" id="text-1-3-3-1">
 <div class="org-src-container">
 <pre class="src src-plantuml">@startuml
@@ -125,7 +126,7 @@ listopeniconic
 </div>
 
 
-<div id="org32c55b5" class="figure">
+<div id="orgd257f0e" class="figure">
 <p><img src="../images/./plantuml-EuP8sX.png" alt="plantuml-EuP8sX.png" />
 </p>
 </div>
@@ -139,7 +140,7 @@ Bob -&gt; Alice : $txt
 !procedure $zyt($title)
 "
 {{
-                  salt
+                salt
 {^$title
 item1
 item2
@@ -150,7 +151,7 @@ $go("Hello")
 !endprocedure
 (*)-&gt;"
 {{
-                  salt
+                salt
 {+
 List
 item1
@@ -166,15 +167,15 @@ ocr_selection -&gt; "结束"
 </div>
 
 
-<div id="org8fc7316" class="figure">
+<div id="orgfab67af" class="figure">
 <p><img src="../images/./plantuml-yEK18c.png" alt="plantuml-yEK18c.png" />
 </p>
 </div>
 <div class="org-src-container">
 <pre class="src src-plantuml">@startuml
 !$foo = { "company": "Skynet", "employees" : [
-        {"name" : "alice", "salary": 100 },
-        {"name" : "bob", "salary": 50} ]
+      {"name" : "alice", "salary": 100 },
+      {"name" : "bob", "salary": 50} ]
 }
 
 !$attribute_1="name"
@@ -188,7 +189,7 @@ start
 </div>
 
 
-<div id="org304132b" class="figure">
+<div id="orgd7b6e0a" class="figure">
 <p><img src="../images/./plantuml-lPbF0k.png" alt="plantuml-lPbF0k.png" />
 </p>
 </div>
@@ -197,60 +198,60 @@ start
 <pre class="src src-plantuml">@startuml
 
 !function faceComp()
-          !return "{{\nsalt\n{^&lt;b&gt;卡片类\n* &lt;color:green&gt;香港通行证\n* 澳门通行证\n* 台湾通行证\n* ...}\n}}"
+        !return "{{\nsalt\n{^&lt;b&gt;卡片类\n* &lt;color:green&gt;香港通行证\n* 澳门通行证\n* 台湾通行证\n* ...}\n}}"
 !endfunction
 
 !procedure $go($txt)
-          Bob -&gt; Alice : $txt
+        Bob -&gt; Alice : $txt
 !endprocedure
 !$passport_lists = {"title":"护照类", "list":["护照页", "签证页", "盖章页"]}
 !$card_lists = {"title":"卡片类", "list":["香港通行证", "澳门通行证", "台湾通行证"]}
 !procedure $ocrlist($salt)
 
 {{
-          salt
-          {^&lt;b&gt;$salt.title
-                  !foreach type in $salt.list
-                          * &lt;color:green&gt;&lt;&amp;credit-card&gt;type
-                  !endfor
-                  * &lt;&amp;credit-card&gt;&lt;&amp;ellipses&gt;
-          }
+        salt
+        {^&lt;b&gt;$salt.title
+                !foreach type in $salt.list
+                        * &lt;color:green&gt;&lt;&amp;credit-card&gt;type
+                !endfor
+                * &lt;&amp;credit-card&gt;&lt;&amp;ellipses&gt;
+        }
 }}
 
 !endprocedure
 start
-          repeat :{{\nsalt\n{+&lt;b&gt;小屏待机界面\n[OCR识别]}\n}};
-          -&gt;点击OCR识别;
-          :启动图片扫描;
-          switch (算法返回结果)
-          case (识别失败)
-                  :小屏幕提示识别失败;
-          case (卡片类)
-                  :$ocrlist($card_lists);
-                  -&gt;
-                  if(正面?(提取到人脸)) then (yes)
-                          :大屏开启人脸识别比对;
-                  endif
-                  :小屏提示扫描另外一面;
-          case (护照类)
-                  :$ocrlist($passport_lists);	
-                  -&gt;
-                  if(含头像信息) then (yes)
-                          :同步开启人脸比对;
-                          :faceComp();
-                  endif
-                  :提示扫描护照剩余其他必须页;
-          endswitch
-          repeat while(true)
-          :json test{
-                                  "type":1
-                                };
+        repeat :{{\nsalt\n{+&lt;b&gt;小屏待机界面\n[OCR识别]}\n}};
+        -&gt;点击OCR识别;
+        :启动图片扫描;
+        switch (算法返回结果)
+        case (识别失败)
+                :小屏幕提示识别失败;
+        case (卡片类)
+                :$ocrlist($card_lists);
+                -&gt;
+                if(正面?(提取到人脸)) then (yes)
+                        :大屏开启人脸识别比对;
+                endif
+                :小屏提示扫描另外一面;
+        case (护照类)
+                :$ocrlist($passport_lists);	
+                -&gt;
+                if(含头像信息) then (yes)
+                        :同步开启人脸比对;
+                        :faceComp();
+                endif
+                :提示扫描护照剩余其他必须页;
+        endswitch
+        repeat while(true)
+        :json test{
+                                "type":1
+                              };
 @enduml
 </pre>
 </div>
 
 
-<div id="org0bd7c3e" class="figure">
+<div id="org29cfbff" class="figure">
 <p><img src="../images/./plantuml-eskcAP.png" alt="plantuml-eskcAP.png" />
 </p>
 </div>
@@ -258,17 +259,17 @@ start
 <div class="org-src-container">
 <pre class="src src-plantuml">@startjson
 {
-                  "类型值":"类型说明",
-                  "1": "护照页",
-                  "2": "签证页",
-                  "3": "信息页"
+                "类型值":"类型说明",
+                "1": "护照页",
+                "2": "签证页",
+                "3": "信息页"
 }
 @endjson
 </pre>
 </div>
 
 
-<div id="orga744d67" class="figure">
+<div id="org81c54ce" class="figure">
 <p><img src="../images/./plantuml-ufmEhH.png" alt="plantuml-ufmEhH.png" />
 </p>
 </div>
@@ -278,45 +279,45 @@ start
 object AlgType
 
 map "**算法类型 ==&gt; 业务类型**" as CC{
-          算法值 *--&gt; AlgType
-          1   =&gt; 免签护照
-          2   =&gt; 护照
-          ... =&gt; ...
-          100 =&gt; 拍照(拍照按钮触发)
-          101 =&gt; 免签护照(免签Radio按钮触发)
-          102 =&gt; 无签证护照(无签证Radio按钮触发)
+        算法值 *--&gt; AlgType
+        1   =&gt; 免签护照
+        2   =&gt; 护照
+        ... =&gt; ...
+        100 =&gt; 拍照(拍照按钮触发)
+        101 =&gt; 免签护照(免签Radio按钮触发)
+        102 =&gt; 无签证护照(无签证Radio按钮触发)
 }
 class UsrSelectable{
-                boolean : y_or_n
-                Number[] new_type
+              boolean : y_or_n
+              Number[] new_type
 }
 note right of UsrSelectable::new_type
-           可选择的新类型列表(业务角度)
-           比如：
-           护照 --&gt; 免签护照
-           护照 --&gt; 无签证护照
+         可选择的新类型列表(业务角度)
+         比如：
+         护照 --&gt; 免签护照
+         护照 --&gt; 无签证护照
 end note
 class Prompt{
-                String TextPrompt
-                ImageBtn  UIPrompt	
+              String TextPrompt
+              ImageBtn  UIPrompt	
 }
 class IDCtrl{
-                Int 		key_type
-                UsrSelectable selectable
-                Number[] 	min_set
-                boolean autosubmit
-                Prompt prompt?
+              Int 		key_type
+              UsrSelectable selectable
+              Number[] 	min_set
+              boolean autosubmit
+              Prompt prompt?
 }
 note right of IDCtrl::key_type
-           “业务角度”的证件类型，非算法返回的类型值
-           比如：护照、免签护照、无签证护照分别对应三种类型
+         “业务角度”的证件类型，非算法返回的类型值
+         比如：护照、免签护照、无签证护照分别对应三种类型
 end note
 note right of IDCtrl::min_set
-           使能"提交按钮"最小集
+         使能"提交按钮"最小集
 end note
 note right of IDCtrl::autosubmit
-           true: 满足最小集后是自动提交上传数据
-           false: 满足最小集后只使能提交按钮
+         true: 满足最小集后是自动提交上传数据
+         false: 满足最小集后只使能提交按钮
 end note
 
 IDCtrl::selectable --&gt; UsrSelectable
@@ -324,40 +325,40 @@ IDCtrl::key_type --&gt; CC
 IDCtrl::min_set --&gt; AlgType
 IDCtrl::prompt --&gt; Prompt
 object IDCtrlObjectArray
-          IDCtrlObjectArray : key_type = 1
-          IDCtrlObjectArray : usr_selectable = "yes"
-          IDCtrlObjectArray : --
-          IDCtrlObjectArray : key_type = 2
-          IDCtrlObjectArray : usr_selectable = "no"
-          IDCtrlObjectArray : --
-          IDCtrlObjectArray : key_type = 3
-          IDCtrlObjectArray : usr_selectable = "no"
+        IDCtrlObjectArray : key_type = 1
+        IDCtrlObjectArray : usr_selectable = "yes"
+        IDCtrlObjectArray : --
+        IDCtrlObjectArray : key_type = 2
+        IDCtrlObjectArray : usr_selectable = "no"
+        IDCtrlObjectArray : --
+        IDCtrlObjectArray : key_type = 3
+        IDCtrlObjectArray : usr_selectable = "no"
 object AlgType{
-          1 = "护照信息页"
-          2 = "护照签证页"
-          3 = "港澳通行证"
-          100 = "手工选择免签"
-          101 = "手工选择无签证"
-          102 = "拍照类证件"
+        1 = "护照信息页"
+        2 = "护照签证页"
+        3 = "港澳通行证"
+        100 = "手工选择免签"
+        101 = "手工选择无签证"
+        102 = "拍照类证件"
 }
 
 object CurID{
-          key_type = 1
-          avaliable_set = [2, 100]
+        key_type = 1
+        avaliable_set = [2, 100]
 }
 CurID::key_type --&gt; IDCtrlObjectArray
 note right of CurID::key_type
-          当次入住办理流程的业务证件类型
-          能否(比如通过用户交互、或人脸
-          通用类型转为特定证件类型)切换为新类型，
-          需要查 key_type 相同的 IDCtl对象的 selectable
+        当次入住办理流程的业务证件类型
+        能否(比如通过用户交互、或人脸
+        通用类型转为特定证件类型)切换为新类型，
+        需要查 key_type 相同的 IDCtl对象的 selectable
 end note
 @enduml
 </pre>
 </div>
 
 
-<div id="org232cedb" class="figure">
+<div id="org4bdb161" class="figure">
 <p><img src="../images/./plantuml-yRFlnS.png" alt="plantuml-yRFlnS.png" />
 </p>
 </div>
@@ -367,20 +368,23 @@ end note
 </div>
 </div>
 </div>
-<div id="outline-container-org815cd86" class="outline-2">
-<h2 id="org815cd86"><span class="section-number-2">2.</span> 天旅&#xa0;&#xa0;&#xa0;<span class="tag"><span class="ATTACH">ATTACH</span></span></h2>
+
+
+<div id="outline-container-orga1693b0" class="outline-2">
+<h2 id="orga1693b0"><span class="section-number-2">2.</span> 天旅&#xa0;&#xa0;&#xa0;<span class="tag"><span class="ATTACH">ATTACH</span></span></h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org3e37e07" class="outline-3">
-<h3 id="org3e37e07"><span class="section-number-3">2.1.</span> 旅客信息表</h3>
+
+<div id="outline-container-orgd095287" class="outline-3">
+<h3 id="orgd095287"><span class="section-number-3">2.1.</span> 旅客信息表</h3>
 </div>
 
-<div id="outline-container-org2880d37" class="outline-3">
-<h3 id="org2880d37"><span class="section-number-3">2.2.</span> 方案</h3>
+<div id="outline-container-orgcc77a60" class="outline-3">
+<h3 id="orgcc77a60"><span class="section-number-3">2.2.</span> 方案</h3>
 <div class="outline-text-3" id="text-2-2">
 </div>
-<div id="outline-container-org8551b4c" class="outline-4">
-<h4 id="org8551b4c"><span class="section-number-4">2.2.1.</span> 数据库唯一性检测方案</h4>
+<div id="outline-container-orge346b8c" class="outline-4">
+<h4 id="orge346b8c"><span class="section-number-4">2.2.1.</span> 数据库唯一性检测方案</h4>
 <div class="outline-text-4" id="text-2-2-1">
 <div class="org-src-container">
 <pre class="src src-plantuml">@startuml
@@ -495,13 +499,15 @@ end
 </div>
 
 
-<div id="orge6b1db9" class="figure">
+<div id="org1867e64" class="figure">
 <p><img src="../images/./plantuml-R61Ish.png" alt="plantuml-R61Ish.png" />
 </p>
 </div>
 </div>
+
+
 <ol class="org-ol">
-<li><a id="org8d2ce13"></a>数据库&amp;主节点唯一性测试案例<br />
+<li><a id="orgb32c57e"></a>数据库&amp;主节点唯一性测试案例<br />
 <div class="outline-text-5" id="text-2-2-1-1">
 <p>
 案例1. 
@@ -558,8 +564,9 @@ d) 重新打开主节点天旅客户端，等待时间超过1分钟
 </li>
 </ol>
 </div>
-<div id="outline-container-org41afdbc" class="outline-4">
-<h4 id="org41afdbc"><span class="section-number-4">2.2.2.</span> 天旅和AI-HUB动态绑定方案</h4>
+
+<div id="outline-container-org9d116d0" class="outline-4">
+<h4 id="org9d116d0"><span class="section-number-4">2.2.2.</span> 天旅和AI-HUB动态绑定方案</h4>
 <div class="outline-text-4" id="text-2-2-2">
 <div class="org-src-container">
 <pre class="src src-plantuml">@startuml
@@ -569,96 +576,96 @@ title "动态绑定流程图"
 start
 :天旅启动;
 if(创建线程) then(绑定关系检测子线程)
-          repeat
-          :检查配置文件绑定关系列表(网卡名称+IP)和当前网卡的一致性;
-          if(配置文件有绑定记录&amp;&amp;绑定记录和当前列表对应网卡一致?) then(no)
-                  :枚举遍历本机当前网卡+IP列表;
-                  if(本机多个网卡?) then(yes)
-                          :弹出对话框，提示由运维人员根据AI-HUB部署情况选择合适的网卡设备;
-                          :根据运维人员的交互选择确定绑定网卡;
-                  else(no)
-                          :选择当前唯一网卡作为绑定网卡;
-                  endif
-                  if(后台or前端?) then(后台任务)
-                  repeat :启动5秒循环广播定时任务;
-                          :向所在子网广播`绑定设备`消息;
-                          :接收并记录AI-HUB的配对响应消息(IP+随机配对码);
-                  repeat while(定时任务停止?) is(no)
-                  note left
-                          每个IP一份记录，如有相同IP且随机码不同，则后收到的覆盖先收到的记录
-                          AI-HUB端，如当前显示的随机配对码消失前收到新的天旅“配对广播”，
-                          AI-HUB端保持随机码不变\n第一期:暂不考虑黑客攻击行为
-                          第二期:AI-HUB生成4字节随机数(记为R1),
-                          和4位数字/大写字母(不含字母I/O、数字0/1,记为R2)
-                          在AI-HUB屏幕显示R2供柜员查看以便在天旅端输入
-                          AI-HUB用R1、R2拼成8字节数据，作为DES密钥和明文数据，
-                          做自加密将加密结果的后4字节(记为MAC),
-                          在"配对请求回应"中发出 IP+R1+MAC
+        repeat
+        :检查配置文件绑定关系列表(网卡名称+IP)和当前网卡的一致性;
+        if(配置文件有绑定记录&amp;&amp;绑定记录和当前列表对应网卡一致?) then(no)
+                :枚举遍历本机当前网卡+IP列表;
+                if(本机多个网卡?) then(yes)
+                        :弹出对话框，提示由运维人员根据AI-HUB部署情况选择合适的网卡设备;
+                        :根据运维人员的交互选择确定绑定网卡;
+                else(no)
+                        :选择当前唯一网卡作为绑定网卡;
+                endif
+                if(后台or前端?) then(后台任务)
+                repeat :启动5秒循环广播定时任务;
+                        :向所在子网广播`绑定设备`消息;
+                        :接收并记录AI-HUB的配对响应消息(IP+随机配对码);
+                repeat while(定时任务停止?) is(no)
+                note left
+                        每个IP一份记录，如有相同IP且随机码不同，则后收到的覆盖先收到的记录
+                        AI-HUB端，如当前显示的随机配对码消失前收到新的天旅“配对广播”，
+                        AI-HUB端保持随机码不变\n第一期:暂不考虑黑客攻击行为
+                        第二期:AI-HUB生成4字节随机数(记为R1),
+                        和4位数字/大写字母(不含字母I/O、数字0/1,记为R2)
+                        在AI-HUB屏幕显示R2供柜员查看以便在天旅端输入
+                        AI-HUB用R1、R2拼成8字节数据，作为DES密钥和明文数据，
+                        做自加密将加密结果的后4字节(记为MAC),
+                        在"配对请求回应"中发出 IP+R1+MAC
 
-                          供AI-HUB验证AI-HUB验证通过才做绑定关系切换;
-                          否则切换当前使用的随机数以及显示随机码，
-                          再次发送对"配对请求广播"的回应;
-                  end note
-                  else(前端界面)
-                  repeat :添加配对设备;
-                          :弹出类似左侧提示语的输入框:”;
-                  note left
-                          设备尚未绑定或IP发生变化，请输入配对码以重新绑定设备
-                          在需要绑定的AI-HUB屏幕查看配对码
-                          注："配对" "取消"两个按钮
-                                  配对按钮默认置灰不使能，柜员输慢4个字符后，如不匹配，
-                                  提示"配对码错误，请确认要绑定的AI-HUB配对码"
-                                  输入的"配对码"在收到的AI-HUB响应记录中匹配
-                                  (使用同样算法得到一致的MAC)才使能"配对"按钮
-                  end note
-                  if(柜员按钮选择?) then(取消)
-                          break
-                  else (配对)
-                          :弹出继续添加提示框;
-                  endif
-                  repeat while(柜员选择继续添加?) is(yes) not(no)
-                  :停止循环广播定时任务;
-                  endif
-                  if(有待添加设备?) then(yes)
-                          :启动1分钟超时定时器;
-                          while(定时器超时?) is(未超时)
-                                  :发送“配对关系广播”;
-                                  :(天旅IP+AI-HUB[IP1、IP2...])列表;
-                                  note right
-                                          AI-HUB可同时收到多个天旅“配对请求广播”
-                                          和哪个天旅绑定以“配对关系广播”为准
-                                  end note
-                                  :阻塞接收广播(5秒超时)
-                                  记录 "配对关系广播"IP列表中的AI-HUB TCP连接;
-                                  if(收到所有配对AI-HUB的TCP连接?) then(yes)
-                                          break
-                                  else(no)
-                                  endif
-                                  if(超时?) then(yes)
-                                          :弹出对话框，列出所有未回应的AI-HUB IP列表，提示
-                                          “AI-HUB(IP1/IP2/IP3...)配对失败，请拍照当前提示，联系运维人员解决”;
-                                          break
-                                  endif
-                          end while(超时)
-                  endif
-          endif
-          label sleep
-          :进程睡眠(可定时/(IP变化事件?)唤醒);
-          repeat while(唤醒?) is(yes)
-          -&gt;超时处理;
-          -[hidden]-&gt;
-          detach
+                        供AI-HUB验证AI-HUB验证通过才做绑定关系切换;
+                        否则切换当前使用的随机数以及显示随机码，
+                        再次发送对"配对请求广播"的回应;
+                end note
+                else(前端界面)
+                repeat :添加配对设备;
+                        :弹出类似左侧提示语的输入框:”;
+                note left
+                        设备尚未绑定或IP发生变化，请输入配对码以重新绑定设备
+                        在需要绑定的AI-HUB屏幕查看配对码
+                        注："配对" "取消"两个按钮
+                                配对按钮默认置灰不使能，柜员输慢4个字符后，如不匹配，
+                                提示"配对码错误，请确认要绑定的AI-HUB配对码"
+                                输入的"配对码"在收到的AI-HUB响应记录中匹配
+                                (使用同样算法得到一致的MAC)才使能"配对"按钮
+                end note
+                if(柜员按钮选择?) then(取消)
+                        break
+                else (配对)
+                        :弹出继续添加提示框;
+                endif
+                repeat while(柜员选择继续添加?) is(yes) not(no)
+                :停止循环广播定时任务;
+                endif
+                if(有待添加设备?) then(yes)
+                        :启动1分钟超时定时器;
+                        while(定时器超时?) is(未超时)
+                                :发送“配对关系广播”;
+                                :(天旅IP+AI-HUB[IP1、IP2...])列表;
+                                note right
+                                        AI-HUB可同时收到多个天旅“配对请求广播”
+                                        和哪个天旅绑定以“配对关系广播”为准
+                                end note
+                                :阻塞接收广播(5秒超时)
+                                记录 "配对关系广播"IP列表中的AI-HUB TCP连接;
+                                if(收到所有配对AI-HUB的TCP连接?) then(yes)
+                                        break
+                                else(no)
+                                endif
+                                if(超时?) then(yes)
+                                        :弹出对话框，列出所有未回应的AI-HUB IP列表，提示
+                                        “AI-HUB(IP1/IP2/IP3...)配对失败，请拍照当前提示，联系运维人员解决”;
+                                        break
+                                endif
+                        end while(超时)
+                endif
+        endif
+        label sleep
+        :进程睡眠(可定时/(IP变化事件?)唤醒);
+        repeat while(唤醒?) is(yes)
+        -&gt;超时处理;
+        -[hidden]-&gt;
+        detach
 else
-          :主线程/数据库&amp;节点监控线程逻辑...;
-          -[hidden]-&gt;
-          detach
+        :主线程/数据库&amp;节点监控线程逻辑...;
+        -[hidden]-&gt;
+        detach
 endif
 @enduml
 </pre>
 </div>
 
 
-<div id="org0e9d59f" class="figure">
+<div id="orgd456c05" class="figure">
 <p><img src="../images/./plantuml-NZSOug.png" alt="plantuml-NZSOug.png" />
 </p>
 </div>
@@ -666,12 +673,13 @@ endif
 </div>
 </div>
 </div>
-<div id="outline-container-orgac23fbc" class="outline-2">
-<h2 id="orgac23fbc"><span class="section-number-2">3.</span> 问题证件分析</h2>
+
+<div id="outline-container-org9a52652" class="outline-2">
+<h2 id="org9a52652"><span class="section-number-2">3.</span> 问题证件分析</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-org011c236" class="outline-3">
-<h3 id="org011c236"><span class="section-number-3">3.1.</span> 香港身份证</h3>
+<div id="outline-container-org4b6045c" class="outline-3">
+<h3 id="org4b6045c"><span class="section-number-3">3.1.</span> 香港身份证</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 <a href="https://www.icao.int/publications/pages/publication.aspx?docnum=9303">ICAO Doc 9303校验码</a>
@@ -1059,116 +1067,120 @@ CRH0429635510263301096M6804
 CRH04296355102633010966804163R1768998&lt;6
 </p>
 </div>
-<div id="outline-container-org2504b72" class="outline-4">
-<h4 id="org2504b72"><span class="section-number-4">3.1.1.</span> 机读码解析</h4>
+
+<div id="outline-container-org45b9a1a" class="outline-4">
+<h4 id="org45b9a1a"><span class="section-number-4">3.1.1.</span> 机读码解析</h4>
 <div class="outline-text-4" id="text-3-1-1">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(<span style="font-weight: bold;">let*</span> (
-                 (col-num <span style="font-style: italic;">""</span>)
-                 (h-line <span style="font-style: italic;">"\n|"</span>)
-                 (head1)
-                 (head2)
-                 (head3)
-                 (cn-name-hex)
-                 (cn-name <span style="font-style: italic;">""</span>)
-                 (century-of-birth)
+               (col-num <span style="font-style: italic;">""</span>)
+               (h-line <span style="font-style: italic;">"\n|"</span>)
+               (head1)
+               (head2)
+               (head3)
+               (cn-name-hex)
+               (cn-name <span style="font-style: italic;">""</span>)
+               (century-of-birth)
+               )
+      (<span style="font-weight: bold;">cl-do</span>
+              (
+               (col 1 (1+ col))
+               )
+              (
+               (= col 30)
+               (<span style="font-weight: bold;">progn</span>
+                 (<span style="font-weight: bold;">setq</span> col-num (concat col-num <span style="font-style: italic;">"30"</span>))
+                 (<span style="font-weight: bold;">setq</span> h-line (concat h-line <span style="font-style: italic;">"-|\n|"</span>))
                  )
-        (<span style="font-weight: bold;">cl-do</span>
-                (
-                 (col 1 (1+ col))
-                 )
-                (
-                 (= col 30)
-                 (<span style="font-weight: bold;">progn</span>
-                   (<span style="font-weight: bold;">setq</span> col-num (concat col-num <span style="font-style: italic;">"30"</span>))
-                   (<span style="font-weight: bold;">setq</span> h-line (concat h-line <span style="font-style: italic;">"-|\n|"</span>))
-                   )
-                 )
-          (<span style="font-weight: bold;">progn</span>
-                (<span style="font-weight: bold;">setq</span> col-num (concat col-num (format <span style="font-style: italic;">"%d"</span> col) <span style="font-style: italic;">"|"</span>))
-                (<span style="font-weight: bold;">setq</span> h-line (concat h-line (format <span style="font-style: italic;">"-"</span> h-line) <span style="font-style: italic;">"|"</span>)))
-          )
-        (<span style="font-weight: bold;">setq</span> head1 <span style="font-style: italic;">"&#35777;&#20214;|&#26631;&#35782;|&#36890;|&#34892;|&#35777;|&#21495;|&#30721;|||||&#26657;&#39564;&#20301;|&#25442;&#35777;|&#27425;&#25968;|&#26657;&#39564;&#20301;|&#26377;&#25928;&#26399;||||||&#26657;&#39564;&#20301;|&#24615;&#21035;&#30721;|&#20986;|&#29983;|&#26085;|&#26399;|||&#26657;&#39564;&#20301;"</span>)
-        (<span style="font-weight: bold;">setq</span> head2 <span style="font-style: italic;">"&#20013;|&#25991;|&#22995;|&#21517;|||||||||||||&#22995;&#21517;|&#24323;&#23383;&#25968;|&#20986;&#29983;&#19990;&#32426;|&#36523;|&#20221;|&#35777;|&#21495;|&#30721;|||||&#26657;&#39564;&#20301;|&#26657;&#39564;&#20301;"</span>)
-        (<span style="font-weight: bold;">setq</span> head3 <span style="font-style: italic;">"&#25289;|&#19969;|&#21270;|&#22995;|&#21517;|||||||||||||||||||||||||"</span>)
-        (<span style="font-weight: bold;">setq</span> century-of-birth (format <span style="font-style: italic;">"%d&#19990;&#32426;"</span> (+ 19 (- (string-to-char (substring line2 18 19)) ?A))))
-        (<span style="font-weight: bold;">setq</span> id-num (string-join (split-string (substring line2 19 28) <span style="font-style: italic;">""</span> t) <span style="font-style: italic;">"</span><span style="font-weight: bold; font-style: italic;">\</span><span style="font-style: italic;">|"</span>))
-
-        (<span style="font-weight: bold;">setq</span> cn-name-hex (mapconcat (<span style="font-weight: bold;">lambda</span>(e)
-                                                                   (<span style="font-weight: bold;">let</span> ((diff (- e ?A)))
-                                                                         (char-to-string
-                                                                          (<span style="font-weight: bold;">if</span> (&lt; diff 10)
-                                                                                  (+ diff ?0)
-                                                                                (+ diff (- ?A 10))
-                                                                                )
-                                                                          )
-                                                                         ))
-                                                                 <span style="font-weight: bold; font-style: italic;">;; </span><span style="font-weight: bold; font-style: italic;">(nth 0 (split-string (substring "MOMCLKOJLKKD&lt;&lt;&lt;&lt;AABM197845A&lt;84" 0 16) "&lt;" t))
-</span>                                                                 (nth 0 (split-string (substring line2 0 16) <span style="font-style: italic;">"&lt;"</span> t))
-                                                                 )
-                  )
-        (<span style="font-weight: bold;">cl-do</span>
-                (
-                 (offset 0 (+ 4 offset))
-                 )
-                (
-                 (&gt;= offset (length cn-name-hex))
-                 (<span style="font-weight: bold;">progn</span> 
-                   (<span style="font-weight: bold;">setq</span> cn-name (concat cn-name (make-string 18 ?|) century-of-birth <span style="font-style: italic;">"|"</span> id-num (make-string 1 ?|) ))
-
-                   )
-                 )
-          (<span style="font-weight: bold;">let</span> ((hb (substring cn-name-hex offset (+ offset 2)))
-                        (lb (substring cn-name-hex (+ offset 2) (+ offset 4))))
-                (<span style="font-weight: bold;">setq</span> cn-name (concat cn-name
-                                                          (substring-no-properties
-                                                           (decode-coding-string
-                                                                (concat (byte-to-string (string-to-number hb 16))
-                                                                                (byte-to-string (string-to-number lb 16)))
-                                                                'gbk)
-                                                           )
-                                                          ))
-                )
-          )
-
-        <span style="font-weight: bold; font-style: italic;">;; </span><span style="font-weight: bold; font-style: italic;">(setq cn-name head3)
-</span>        <span style="font-weight: bold; font-style: italic;">;; </span><span style="font-weight: bold; font-style: italic;">(substring-no-properties (decode-coding-string (concat (byte-to-string #xD5) (byte-to-string #xC5)) 'gbk))
-</span>        <span style="font-weight: bold; font-style: italic;">;; </span><span style="font-weight: bold; font-style: italic;">(nth 0 (split-string (substring "MOMCLKOJLKKD&lt;&lt;&lt;&lt;AABM197845A&lt;84" 0 16) "&lt;" t))
-</span>        (prin1 (format <span style="font-style: italic;">"%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s"</span>
-                                   col-num
-                                   h-line
-                                   head1
-                                   h-line
-                                   (string-join (split-string line1 <span style="font-style: italic;">""</span> t) <span style="font-style: italic;">"</span><span style="font-weight: bold; font-style: italic;">\</span><span style="font-style: italic;">|"</span>)
-                                   h-line
-                                   head2
-                                   h-line
-                                   (string-join (split-string line2 <span style="font-style: italic;">""</span> t) <span style="font-style: italic;">"</span><span style="font-weight: bold; font-style: italic;">\</span><span style="font-style: italic;">|"</span>)
-                                   h-line
-                                   cn-name
-                                   h-line
-                                   head3
-                                   h-line
-                                   (string-join (split-string line3 <span style="font-style: italic;">""</span> t) <span style="font-style: italic;">"</span><span style="font-weight: bold; font-style: italic;">\</span><span style="font-style: italic;">|"</span>)
-                                   )
-                   )
+               )
+        (<span style="font-weight: bold;">progn</span>
+              (<span style="font-weight: bold;">setq</span> col-num (concat col-num (format <span style="font-style: italic;">"%d"</span> col) <span style="font-style: italic;">"|"</span>))
+              (<span style="font-weight: bold;">setq</span> h-line (concat h-line (format <span style="font-style: italic;">"-"</span> h-line) <span style="font-style: italic;">"|"</span>)))
         )
+      (<span style="font-weight: bold;">setq</span> head1 <span style="font-style: italic;">"&#35777;&#20214;|&#26631;&#35782;|&#36890;|&#34892;|&#35777;|&#21495;|&#30721;|||||&#26657;&#39564;&#20301;|&#25442;&#35777;|&#27425;&#25968;|&#26657;&#39564;&#20301;|&#26377;&#25928;&#26399;||||||&#26657;&#39564;&#20301;|&#24615;&#21035;&#30721;|&#20986;|&#29983;|&#26085;|&#26399;|||&#26657;&#39564;&#20301;"</span>)
+      (<span style="font-weight: bold;">setq</span> head2 <span style="font-style: italic;">"&#20013;|&#25991;|&#22995;|&#21517;|||||||||||||&#22995;&#21517;|&#24323;&#23383;&#25968;|&#20986;&#29983;&#19990;&#32426;|&#36523;|&#20221;|&#35777;|&#21495;|&#30721;|||||&#26657;&#39564;&#20301;|&#26657;&#39564;&#20301;"</span>)
+      (<span style="font-weight: bold;">setq</span> head3 <span style="font-style: italic;">"&#25289;|&#19969;|&#21270;|&#22995;|&#21517;|||||||||||||||||||||||||"</span>)
+      (<span style="font-weight: bold;">setq</span> century-of-birth (format <span style="font-style: italic;">"%d&#19990;&#32426;"</span> (+ 19 (- (string-to-char (substring line2 18 19)) ?A))))
+      (<span style="font-weight: bold;">setq</span> id-num (string-join (split-string (substring line2 19 28) <span style="font-style: italic;">""</span> t) <span style="font-style: italic;">"</span><span style="font-weight: bold; font-style: italic;">\</span><span style="font-style: italic;">|"</span>))
+
+      (<span style="font-weight: bold;">setq</span> cn-name-hex (mapconcat (<span style="font-weight: bold;">lambda</span>(e)
+                                                                 (<span style="font-weight: bold;">let</span> ((diff (- e ?A)))
+                                                                       (char-to-string
+                                                                        (<span style="font-weight: bold;">if</span> (&lt; diff 10)
+                                                                                (+ diff ?0)
+                                                                              (+ diff (- ?A 10))
+                                                                              )
+                                                                        )
+                                                                       ))
+                                                               <span style="font-weight: bold; font-style: italic;">;; </span><span style="font-weight: bold; font-style: italic;">(nth 0 (split-string (substring "MOMCLKOJLKKD&lt;&lt;&lt;&lt;AABM197845A&lt;84" 0 16) "&lt;" t))
+</span>                                                               (nth 0 (split-string (substring line2 0 16) <span style="font-style: italic;">"&lt;"</span> t))
+                                                               )
+                )
+      (<span style="font-weight: bold;">cl-do</span>
+              (
+               (offset 0 (+ 4 offset))
+               )
+              (
+               (&gt;= offset (length cn-name-hex))
+               (<span style="font-weight: bold;">progn</span> 
+                 (<span style="font-weight: bold;">setq</span> cn-name (concat cn-name (make-string 18 ?|) century-of-birth <span style="font-style: italic;">"|"</span> id-num (make-string 1 ?|) ))
+
+                 )
+               )
+        (<span style="font-weight: bold;">let</span> ((hb (substring cn-name-hex offset (+ offset 2)))
+                      (lb (substring cn-name-hex (+ offset 2) (+ offset 4))))
+              (<span style="font-weight: bold;">setq</span> cn-name (concat cn-name
+                                                        (substring-no-properties
+                                                         (decode-coding-string
+                                                              (concat (byte-to-string (string-to-number hb 16))
+                                                                              (byte-to-string (string-to-number lb 16)))
+                                                              'gbk)
+                                                         )
+                                                        ))
+              )
+        )
+
+      <span style="font-weight: bold; font-style: italic;">;; </span><span style="font-weight: bold; font-style: italic;">(setq cn-name head3)
+</span>      <span style="font-weight: bold; font-style: italic;">;; </span><span style="font-weight: bold; font-style: italic;">(substring-no-properties (decode-coding-string (concat (byte-to-string #xD5) (byte-to-string #xC5)) 'gbk))
+</span>      <span style="font-weight: bold; font-style: italic;">;; </span><span style="font-weight: bold; font-style: italic;">(nth 0 (split-string (substring "MOMCLKOJLKKD&lt;&lt;&lt;&lt;AABM197845A&lt;84" 0 16) "&lt;" t))
+</span>      (prin1 (format <span style="font-style: italic;">"%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s"</span>
+                                 col-num
+                                 h-line
+                                 head1
+                                 h-line
+                                 (string-join (split-string line1 <span style="font-style: italic;">""</span> t) <span style="font-style: italic;">"</span><span style="font-weight: bold; font-style: italic;">\</span><span style="font-style: italic;">|"</span>)
+                                 h-line
+                                 head2
+                                 h-line
+                                 (string-join (split-string line2 <span style="font-style: italic;">""</span> t) <span style="font-style: italic;">"</span><span style="font-weight: bold; font-style: italic;">\</span><span style="font-style: italic;">|"</span>)
+                                 h-line
+                                 cn-name
+                                 h-line
+                                 head3
+                                 h-line
+                                 (string-join (split-string line3 <span style="font-style: italic;">""</span> t) <span style="font-style: italic;">"</span><span style="font-weight: bold; font-style: italic;">\</span><span style="font-style: italic;">|"</span>)
+                                 )
+                 )
+      )
 </pre>
 </div>
 </div>
 </div>
 </div>
 </div>
-<div id="outline-container-org73cbe14" class="outline-2">
-<h2 id="org73cbe14"><span class="section-number-2">4.</span> 规范</h2>
+
+
+<div id="outline-container-org880fbe6" class="outline-2">
+<h2 id="org880fbe6"><span class="section-number-2">4.</span> 规范</h2>
 <div class="outline-text-2" id="text-4">
 </div>
-<div id="outline-container-org0530ccf" class="outline-3">
-<h3 id="org0530ccf"><span class="section-number-3">4.1.</span> ICAO 9303</h3>
+<div id="outline-container-orgd99ed4c" class="outline-3">
+<h3 id="orgd99ed4c"><span class="section-number-3">4.1.</span> ICAO 9303</h3>
 </div>
 </div>
-<div id="outline-container-orgbf3a682" class="outline-2">
-<h2 id="orgbf3a682"><span class="section-number-2">5.</span> 社采&amp;AI-HUB安全方案</h2>
+
+<div id="outline-container-orgbc995b7" class="outline-2">
+<h2 id="orgbc995b7"><span class="section-number-2">5.</span> 社采&amp;AI-HUB安全方案</h2>
 <div class="outline-text-2" id="text-5">
 <div class="org-src-container">
 <pre class="src src-plantuml">@startuml
@@ -1213,16 +1225,16 @@ note over C: 计算SK
 '/
 note over C: 加密业务HTTP请求\n得到EncHttpReq
 note over C,S
-          EncHttpReq = SymEncrypt（ALG_SM3_CBC，IV(timestamp)，SK， HttpReq，Padding_PKCS7）
-          将EncHttpReq||Timestamp||Rs[用来索引SK] 作为特殊HTTP接口请求数据发送
-          通过参数区分是密钥协商、还是密文请求数据
+        EncHttpReq = SymEncrypt（ALG_SM3_CBC，IV(timestamp)，SK， HttpReq，Padding_PKCS7）
+        将EncHttpReq||Timestamp||Rs[用来索引SK] 作为特殊HTTP接口请求数据发送
+        通过参数区分是密钥协商、还是密文请求数据
 endnote
 C -&gt; S: 发送HttpReq, 数据域: EncHttpReq||Timestamp||Rs
-          note over S
-          特殊Http请求接口：Rs索引到SK，解密数据
-          做补齐格式检查/时间戳窗口检查
-          得到HttpReq
-          endnote
+        note over S
+        特殊Http请求接口：Rs索引到SK，解密数据
+        做补齐格式检查/时间戳窗口检查
+        得到HttpReq
+        endnote
 S -&gt; S2: 把HttpReq分发给业务处理代码
 S2 -&gt; S: 业务处理逻辑响应Resp
 note over S: SK加密Resp
@@ -1233,10 +1245,10 @@ S -&gt; C: HttpResp
 C2 -&gt; S2: 网络HttpReq
 S2 -&gt; C2: HttpResp
 note across: 密文API试运行过渡期
-                  note over S2,C2
-                  关闭业务API对网络端明文请求的响应
-                  只保留网页版接口?
-                  endnote
+                note over S2,C2
+                关闭业务API对网络端明文请求的响应
+                只保留网页版接口?
+                endnote
 C2 -&gt; C2: 
 destroy C2
 C2 -&gt; S2: 明文HttpReq
@@ -1251,11 +1263,11 @@ note over S: 加密
 S -&gt; C: 密文响应
 ...
 C -&gt; S: 加密Http请求
-                  note over S
-                  解密验证失败
-                  或SK有效窗口关闭
-                  或索引不到SK
-                  endnote
+                note over S
+                解密验证失败
+                或SK有效窗口关闭
+                或索引不到SK
+                endnote
 S -&gt; C: 错误码
 C &lt;--&gt; S: 重新发起会话密钥协商过程
 @enduml
@@ -1263,14 +1275,16 @@ C &lt;--&gt; S: 重新发起会话密钥协商过程
 </div>
 
 
-<div id="org38274ac" class="figure">
+<div id="org28ecfbf" class="figure">
 <p><img src="../images/./plantuml-jxkKWM.png" alt="plantuml-jxkKWM.png" />
 </p>
 </div>
 </div>
 </div>
-<div id="outline-container-org40c8d4a" class="outline-2">
-<h2 id="org40c8d4a"><span class="section-number-2">6.</span> AI-HUB &amp; Client 授权方案</h2>
+
+
+<div id="outline-container-org974fd29" class="outline-2">
+<h2 id="org974fd29"><span class="section-number-2">6.</span> AI-HUB &amp; Client 授权方案</h2>
 <div class="outline-text-2" id="text-6">
 <div class="org-src-container">
 <pre class="src src-plantuml">@startuml
@@ -1287,22 +1301,22 @@ activate H
 C -&gt; H: "旅业客户端名称、客户端电脑网卡MAC、酒店名称"
 H -&gt; TS: "旅业客户端名称、客户端电脑网卡MAC、酒店名称"
 note over H, TS
-          根据业务流程和业务量考虑：前期可省却授权服务器
-          手工制作，人工传递,导入
+        根据业务流程和业务量考虑：前期可省却授权服务器
+        手工制作，人工传递,导入
 endnote
 note over TS
-          务实考虑市场需求：只考虑酒店方（非技术人员）鸡贼串用客户端
-          需要客户端厂商配合承诺不做假
-          如客户端厂商配合酒店做假，我司只能防止一机多用，防不了串用
-          根据商务文件检查酒店、客户端申请合理性，网卡MAC查重
-          如考虑客户端厂商作假动机，商务合同中可事先约定商务处罚条款
-          后续根据AI-HUB和我司服务器的交互数据核查
+        务实考虑市场需求：只考虑酒店方（非技术人员）鸡贼串用客户端
+        需要客户端厂商配合承诺不做假
+        如客户端厂商配合酒店做假，我司只能防止一机多用，防不了串用
+        根据商务文件检查酒店、客户端申请合理性，网卡MAC查重
+        如考虑客户端厂商作假动机，商务合同中可事先约定商务处罚条款
+        后续根据AI-HUB和我司服务器的交互数据核查
 endnote
 note over K
 根据业务流程考虑
-          授权Key在线方案：
-          或一直在线，定期核查数据
-          或根据商务申请，即插即用
+        授权Key在线方案：
+        或一直在线，定期核查数据
+        或根据商务申请，即插即用
 endnote
 TS -&gt; K: "旅业客户端名称、网卡MAC、酒店名称"
 K -&gt; TS: 生成授权签名 ClientCert
@@ -1330,23 +1344,23 @@ note over H
 否则使用自身设备证书的公钥进行验证
 endnote
 alt Token验证通过
-          H -&gt; CS: 业务数据
+        H -&gt; CS: 业务数据
 else Token验证失败
 note over H
 或店员核对时修改了识别错误的证件信息
 或客户端连了其他非天地融证件扫描设备，偷偷借道上传
 endnote
 loop 3次
-                  note over H
-                  提示证件数据验证失败
-                  显示随机码，由店员输入确认
-                  endnote
+                note over H
+                提示证件数据验证失败
+                显示随机码，由店员输入确认
+                endnote
 end
-          alt 验证码比对通过
-          H -&gt; CS: 业务数据
-          else 验证连续比对失败
-          H -&gt; C: 数据非法
-          end
+        alt 验证码比对通过
+        H -&gt; CS: 业务数据
+        else 验证连续比对失败
+        H -&gt; C: 数据非法
+        end
 end
 ...
 H -&gt; H: 损坏或返修,更换新AI-HUB
@@ -1364,7 +1378,7 @@ H2-&gt; CS: 业务数据
 </div>
 
 
-<div id="org92ae22a" class="figure">
+<div id="org5abeb68" class="figure">
 <p><img src="../images/./plantuml-fS3ruE.png" alt="plantuml-fS3ruE.png" />
 </p>
 </div>
@@ -1372,8 +1386,7 @@ H2-&gt; CS: 业务数据
 </div>
 </div>
 <div id="postamble" class="status">
-<p class="author">Author: zyt</p>
-<p class="date">Created: 2026-04-18 六 00:50</p>
+<p class="date">Created: 2026-04-18 Sat 13:23</p>
 </div>
 </body>
 </html>
