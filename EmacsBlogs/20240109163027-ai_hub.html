@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2026-04-18 Sat 13:23 -->
+<!-- 2026-04-18 Sat 14:27 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>AI-HUB</title>
@@ -17,65 +17,65 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org878e800">1. AI-HUB</a>
+<li><a href="#org02a92ea">1. AI-HUB</a>
 <ul>
-<li><a href="#org8077f5d">1.1. 证件分类</a></li>
-<li><a href="#orgc78c1cd">1.2. 上送数据丢失</a></li>
-<li><a href="#org12bab83">1.3. UI优化</a>
+<li><a href="#org7dfad5d">1.1. 证件分类</a></li>
+<li><a href="#org81052ae">1.2. 上送数据丢失</a></li>
+<li><a href="#org48b6beb">1.3. UI优化</a>
 <ul>
-<li><a href="#orgf424fe0">1.3.1. 根据历史成功识别证件的区域坐标修正区域提示框</a></li>
-<li><a href="#org68775a0">1.3.2. 去掉主动超时机制，改为“经过一定时间后”由酒店前台主动取消</a></li>
-<li><a href="#org83be13d">1.3.3. 流程图</a></li>
+<li><a href="#org2b25c29">1.3.1. 根据历史成功识别证件的区域坐标修正区域提示框</a></li>
+<li><a href="#org53f3f11">1.3.2. 去掉主动超时机制，改为“经过一定时间后”由酒店前台主动取消</a></li>
+<li><a href="#orga26a97c">1.3.3. 流程图</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#orga1693b0">2. 天旅&#xa0;&#xa0;&#xa0;<span class="tag"><span class="ATTACH">ATTACH</span></span></a>
+<li><a href="#org3eea96c">2. 天旅&#xa0;&#xa0;&#xa0;<span class="tag"><span class="ATTACH">ATTACH</span></span></a>
 <ul>
-<li><a href="#orgd095287">2.1. 旅客信息表</a></li>
-<li><a href="#orgcc77a60">2.2. 方案</a>
+<li><a href="#orga13717a">2.1. 旅客信息表</a></li>
+<li><a href="#org311fba8">2.2. 方案</a>
 <ul>
-<li><a href="#orge346b8c">2.2.1. 数据库唯一性检测方案</a></li>
-<li><a href="#org9d116d0">2.2.2. 天旅和AI-HUB动态绑定方案</a></li>
+<li><a href="#org60a570a">2.2.1. 数据库唯一性检测方案</a></li>
+<li><a href="#orgb954e73">2.2.2. 天旅和AI-HUB动态绑定方案</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#org9a52652">3. 问题证件分析</a>
+<li><a href="#orgbfde3c2">3. 问题证件分析</a>
 <ul>
-<li><a href="#org4b6045c">3.1. 香港身份证</a>
+<li><a href="#org0a4fa5d">3.1. 香港身份证</a>
 <ul>
-<li><a href="#org45b9a1a">3.1.1. 机读码解析</a></li>
+<li><a href="#org65d370a">3.1.1. 机读码解析</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#org880fbe6">4. 规范</a>
+<li><a href="#org45e6c58">4. 规范</a>
 <ul>
-<li><a href="#orgd99ed4c">4.1. ICAO 9303</a></li>
+<li><a href="#org78b7167">4.1. ICAO 9303</a></li>
 </ul>
 </li>
-<li><a href="#orgbc995b7">5. 社采&amp;AI-HUB安全方案</a></li>
-<li><a href="#org974fd29">6. AI-HUB &amp; Client 授权方案</a></li>
+<li><a href="#org44c0e23">5. 社采&amp;AI-HUB安全方案</a></li>
+<li><a href="#org35ec2d4">6. AI-HUB &amp; Client 授权方案</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org878e800" class="outline-2">
-<h2 id="org878e800"><span class="section-number-2">1.</span> AI-HUB</h2>
+<div id="outline-container-org02a92ea" class="outline-2">
+<h2 id="org02a92ea"><span class="section-number-2">1.</span> AI-HUB</h2>
 <div class="outline-text-2" id="text-1">
 </div>
 
-<div id="outline-container-org8077f5d" class="outline-3">
-<h3 id="org8077f5d"><span class="section-number-3">1.1.</span> 证件分类</h3>
+<div id="outline-container-org7dfad5d" class="outline-3">
+<h3 id="org7dfad5d"><span class="section-number-3">1.1.</span> 证件分类</h3>
 </div>
-<div id="outline-container-orgc78c1cd" class="outline-3">
-<h3 id="orgc78c1cd"><span class="section-number-3">1.2.</span> 上送数据丢失</h3>
+<div id="outline-container-org81052ae" class="outline-3">
+<h3 id="org81052ae"><span class="section-number-3">1.2.</span> 上送数据丢失</h3>
 </div>
-<div id="outline-container-org12bab83" class="outline-3">
-<h3 id="org12bab83"><span class="section-number-3">1.3.</span> UI优化</h3>
+<div id="outline-container-org48b6beb" class="outline-3">
+<h3 id="org48b6beb"><span class="section-number-3">1.3.</span> UI优化</h3>
 <div class="outline-text-3" id="text-1-3">
 
-<div id="org08067a4" class="figure">
+<div id="org6341502" class="figure">
 <p><img src="../images/test.png" alt="test.png" />
 </p>
 </div>
@@ -97,26 +97,26 @@
 </div>
 
 
-<div id="org8e29bab" class="figure">
+<div id="org1d86940" class="figure">
 <p><img src="../images/./plantuml-szY4Dp.png" alt="plantuml-szY4Dp.png" />
 </p>
 </div>
 </div>
 
-<div id="outline-container-orgf424fe0" class="outline-4">
-<h4 id="orgf424fe0"><span class="section-number-4">1.3.1.</span> 根据历史成功识别证件的区域坐标修正区域提示框</h4>
+<div id="outline-container-org2b25c29" class="outline-4">
+<h4 id="org2b25c29"><span class="section-number-4">1.3.1.</span> 根据历史成功识别证件的区域坐标修正区域提示框</h4>
 </div>
 
-<div id="outline-container-org68775a0" class="outline-4">
-<h4 id="org68775a0"><span class="section-number-4">1.3.2.</span> 去掉主动超时机制，改为“经过一定时间后”由酒店前台主动取消</h4>
+<div id="outline-container-org53f3f11" class="outline-4">
+<h4 id="org53f3f11"><span class="section-number-4">1.3.2.</span> 去掉主动超时机制，改为“经过一定时间后”由酒店前台主动取消</h4>
 </div>
 
-<div id="outline-container-org83be13d" class="outline-4">
-<h4 id="org83be13d"><span class="section-number-4">1.3.3.</span> 流程图</h4>
+<div id="outline-container-orga26a97c" class="outline-4">
+<h4 id="orga26a97c"><span class="section-number-4">1.3.3.</span> 流程图</h4>
 <div class="outline-text-4" id="text-1-3-3">
 </div>
 <ol class="org-ol">
-<li><a id="org1401df3"></a>OCR识别类<br />
+<li><a id="org52d3b14"></a>OCR识别类<br />
 <div class="outline-text-5" id="text-1-3-3-1">
 <div class="org-src-container">
 <pre class="src src-plantuml">@startuml
@@ -126,7 +126,7 @@ listopeniconic
 </div>
 
 
-<div id="orgd257f0e" class="figure">
+<div id="org337d326" class="figure">
 <p><img src="../images/./plantuml-EuP8sX.png" alt="plantuml-EuP8sX.png" />
 </p>
 </div>
@@ -167,7 +167,7 @@ ocr_selection -&gt; "结束"
 </div>
 
 
-<div id="orgfab67af" class="figure">
+<div id="orgb8db398" class="figure">
 <p><img src="../images/./plantuml-yEK18c.png" alt="plantuml-yEK18c.png" />
 </p>
 </div>
@@ -189,7 +189,7 @@ start
 </div>
 
 
-<div id="orgd7b6e0a" class="figure">
+<div id="org67ce3c0" class="figure">
 <p><img src="../images/./plantuml-lPbF0k.png" alt="plantuml-lPbF0k.png" />
 </p>
 </div>
@@ -251,7 +251,7 @@ start
 </div>
 
 
-<div id="org29cfbff" class="figure">
+<div id="org67409e8" class="figure">
 <p><img src="../images/./plantuml-eskcAP.png" alt="plantuml-eskcAP.png" />
 </p>
 </div>
@@ -269,7 +269,7 @@ start
 </div>
 
 
-<div id="org81c54ce" class="figure">
+<div id="org2a2b96a" class="figure">
 <p><img src="../images/./plantuml-ufmEhH.png" alt="plantuml-ufmEhH.png" />
 </p>
 </div>
@@ -358,7 +358,7 @@ end note
 </div>
 
 
-<div id="org4bdb161" class="figure">
+<div id="org012933e" class="figure">
 <p><img src="../images/./plantuml-yRFlnS.png" alt="plantuml-yRFlnS.png" />
 </p>
 </div>
@@ -370,21 +370,21 @@ end note
 </div>
 
 
-<div id="outline-container-orga1693b0" class="outline-2">
-<h2 id="orga1693b0"><span class="section-number-2">2.</span> 天旅&#xa0;&#xa0;&#xa0;<span class="tag"><span class="ATTACH">ATTACH</span></span></h2>
+<div id="outline-container-org3eea96c" class="outline-2">
+<h2 id="org3eea96c"><span class="section-number-2">2.</span> 天旅&#xa0;&#xa0;&#xa0;<span class="tag"><span class="ATTACH">ATTACH</span></span></h2>
 <div class="outline-text-2" id="text-2">
 </div>
 
-<div id="outline-container-orgd095287" class="outline-3">
-<h3 id="orgd095287"><span class="section-number-3">2.1.</span> 旅客信息表</h3>
+<div id="outline-container-orga13717a" class="outline-3">
+<h3 id="orga13717a"><span class="section-number-3">2.1.</span> 旅客信息表</h3>
 </div>
 
-<div id="outline-container-orgcc77a60" class="outline-3">
-<h3 id="orgcc77a60"><span class="section-number-3">2.2.</span> 方案</h3>
+<div id="outline-container-org311fba8" class="outline-3">
+<h3 id="org311fba8"><span class="section-number-3">2.2.</span> 方案</h3>
 <div class="outline-text-3" id="text-2-2">
 </div>
-<div id="outline-container-orge346b8c" class="outline-4">
-<h4 id="orge346b8c"><span class="section-number-4">2.2.1.</span> 数据库唯一性检测方案</h4>
+<div id="outline-container-org60a570a" class="outline-4">
+<h4 id="org60a570a"><span class="section-number-4">2.2.1.</span> 数据库唯一性检测方案</h4>
 <div class="outline-text-4" id="text-2-2-1">
 <div class="org-src-container">
 <pre class="src src-plantuml">@startuml
@@ -499,7 +499,7 @@ end
 </div>
 
 
-<div id="org1867e64" class="figure">
+<div id="org3d65b73" class="figure">
 <p><img src="../images/./plantuml-R61Ish.png" alt="plantuml-R61Ish.png" />
 </p>
 </div>
@@ -507,7 +507,7 @@ end
 
 
 <ol class="org-ol">
-<li><a id="orgb32c57e"></a>数据库&amp;主节点唯一性测试案例<br />
+<li><a id="org20650fa"></a>数据库&amp;主节点唯一性测试案例<br />
 <div class="outline-text-5" id="text-2-2-1-1">
 <p>
 案例1. 
@@ -565,8 +565,8 @@ d) 重新打开主节点天旅客户端，等待时间超过1分钟
 </ol>
 </div>
 
-<div id="outline-container-org9d116d0" class="outline-4">
-<h4 id="org9d116d0"><span class="section-number-4">2.2.2.</span> 天旅和AI-HUB动态绑定方案</h4>
+<div id="outline-container-orgb954e73" class="outline-4">
+<h4 id="orgb954e73"><span class="section-number-4">2.2.2.</span> 天旅和AI-HUB动态绑定方案</h4>
 <div class="outline-text-4" id="text-2-2-2">
 <div class="org-src-container">
 <pre class="src src-plantuml">@startuml
@@ -665,7 +665,7 @@ endif
 </div>
 
 
-<div id="orgd456c05" class="figure">
+<div id="orgf5217ef" class="figure">
 <p><img src="../images/./plantuml-NZSOug.png" alt="plantuml-NZSOug.png" />
 </p>
 </div>
@@ -674,12 +674,12 @@ endif
 </div>
 </div>
 
-<div id="outline-container-org9a52652" class="outline-2">
-<h2 id="org9a52652"><span class="section-number-2">3.</span> 问题证件分析</h2>
+<div id="outline-container-orgbfde3c2" class="outline-2">
+<h2 id="orgbfde3c2"><span class="section-number-2">3.</span> 问题证件分析</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-org4b6045c" class="outline-3">
-<h3 id="org4b6045c"><span class="section-number-3">3.1.</span> 香港身份证</h3>
+<div id="outline-container-org0a4fa5d" class="outline-3">
+<h3 id="org0a4fa5d"><span class="section-number-3">3.1.</span> 香港身份证</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 <a href="https://www.icao.int/publications/pages/publication.aspx?docnum=9303">ICAO Doc 9303校验码</a>
@@ -1068,8 +1068,8 @@ CRH04296355102633010966804163R1768998&lt;6
 </p>
 </div>
 
-<div id="outline-container-org45b9a1a" class="outline-4">
-<h4 id="org45b9a1a"><span class="section-number-4">3.1.1.</span> 机读码解析</h4>
+<div id="outline-container-org65d370a" class="outline-4">
+<h4 id="org65d370a"><span class="section-number-4">3.1.1.</span> 机读码解析</h4>
 <div class="outline-text-4" id="text-3-1-1">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(<span style="font-weight: bold;">let*</span> (
@@ -1170,17 +1170,17 @@ CRH04296355102633010966804163R1768998&lt;6
 </div>
 
 
-<div id="outline-container-org880fbe6" class="outline-2">
-<h2 id="org880fbe6"><span class="section-number-2">4.</span> 规范</h2>
+<div id="outline-container-org45e6c58" class="outline-2">
+<h2 id="org45e6c58"><span class="section-number-2">4.</span> 规范</h2>
 <div class="outline-text-2" id="text-4">
 </div>
-<div id="outline-container-orgd99ed4c" class="outline-3">
-<h3 id="orgd99ed4c"><span class="section-number-3">4.1.</span> ICAO 9303</h3>
+<div id="outline-container-org78b7167" class="outline-3">
+<h3 id="org78b7167"><span class="section-number-3">4.1.</span> ICAO 9303</h3>
 </div>
 </div>
 
-<div id="outline-container-orgbc995b7" class="outline-2">
-<h2 id="orgbc995b7"><span class="section-number-2">5.</span> 社采&amp;AI-HUB安全方案</h2>
+<div id="outline-container-org44c0e23" class="outline-2">
+<h2 id="org44c0e23"><span class="section-number-2">5.</span> 社采&amp;AI-HUB安全方案</h2>
 <div class="outline-text-2" id="text-5">
 <div class="org-src-container">
 <pre class="src src-plantuml">@startuml
@@ -1275,7 +1275,7 @@ C &lt;--&gt; S: 重新发起会话密钥协商过程
 </div>
 
 
-<div id="org28ecfbf" class="figure">
+<div id="org1bc3020" class="figure">
 <p><img src="../images/./plantuml-jxkKWM.png" alt="plantuml-jxkKWM.png" />
 </p>
 </div>
@@ -1283,8 +1283,8 @@ C &lt;--&gt; S: 重新发起会话密钥协商过程
 </div>
 
 
-<div id="outline-container-org974fd29" class="outline-2">
-<h2 id="org974fd29"><span class="section-number-2">6.</span> AI-HUB &amp; Client 授权方案</h2>
+<div id="outline-container-org35ec2d4" class="outline-2">
+<h2 id="org35ec2d4"><span class="section-number-2">6.</span> AI-HUB &amp; Client 授权方案</h2>
 <div class="outline-text-2" id="text-6">
 <div class="org-src-container">
 <pre class="src src-plantuml">@startuml
@@ -1378,7 +1378,7 @@ H2-&gt; CS: 业务数据
 </div>
 
 
-<div id="org5abeb68" class="figure">
+<div id="orgc2ddb80" class="figure">
 <p><img src="../images/./plantuml-fS3ruE.png" alt="plantuml-fS3ruE.png" />
 </p>
 </div>
@@ -1386,7 +1386,7 @@ H2-&gt; CS: 业务数据
 </div>
 </div>
 <div id="postamble" class="status">
-<p class="date">Created: 2026-04-18 Sat 13:23</p>
+<p class="date">Created: 2026-04-18 Sat 14:27</p>
 </div>
 </body>
 </html>
